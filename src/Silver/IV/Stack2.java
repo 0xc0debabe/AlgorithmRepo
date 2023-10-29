@@ -1,0 +1,39 @@
+package Silver.IV;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Stack;
+
+public class Stack2 {
+    static Stack<Integer> stack = new Stack<>();
+    static StringBuilder sb = new StringBuilder();
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int n = Integer.parseInt(br.readLine());
+
+        for (int i = 0; i < n; i++) {
+            solution(br.readLine());
+        }
+        System.out.println(sb);
+    }
+
+    static void solution(String query) {
+        char c = query.charAt(0);
+
+        switch (c) {
+            case '1' : stack.push(Integer.parseInt(query.substring(2)));
+            return;
+            case '2' : sb.append(stack.isEmpty() ? -1 : stack.pop()).append("\n");
+            return;
+            case '3' : sb.append(stack.size()).append("\n");
+            return;
+            case '4' : sb.append(stack.isEmpty() ? 1 : 0).append("\n");
+            return;
+            case '5' : sb.append(stack.isEmpty() ? -1 : stack.peek()).append("\n");
+            return;
+            default: break;
+        }
+    }
+}
