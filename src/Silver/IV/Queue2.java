@@ -8,59 +8,46 @@ import java.util.*;
 public class Queue2 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        Deque<Integer> deque = new ArrayDeque<>();
         StringBuilder sb = new StringBuilder();
-        Deque<Integer> q = new ArrayDeque<>();
-
         int n = Integer.parseInt(br.readLine());
-        StringTokenizer stk;
 
         while (n-- > 0) {
-            stk = new StringTokenizer(br.readLine(), " ");
-
-            switch (stk.nextToken()) {
-                case "push" :
-                    q.offer(Integer.parseInt(stk.nextToken()));
-                    break;
-                case "pop" :
-                    Integer item = q.poll();
-                    if (item == null) {
-                        sb.append(-1).append("\n");
-                    }
-                    else {
-                        sb.append(item).append("\n");
-                    }
-                    break;
-                case "size":
-                    sb.append(q.size()).append('\n');
-                    break;
-
-                case "empty":
-                    if(q.isEmpty()) {
-                        sb.append(1).append('\n');
-                    }
-                    else {
-                        sb.append(0).append('\n');
-                    }
-                    break;
-                case "front":
-                    Integer ite = q.peek();
-                    if(ite == null) {
-                        sb.append(-1).append('\n');
-                    }
-                    else {
-                        sb.append(ite).append('\n');
-                    }
-                    break;
-
-                case "back":
-                    Integer it = q.peekLast();
-                    if(it == null) {
-                        sb.append(-1).append('\n');
-                    }
-                    else {
-                        sb.append(it).append('\n');
-                    }
-                    break;
+            StringTokenizer stk = new StringTokenizer(br.readLine());
+            String s = stk.nextToken();
+            if (s.equals("push")) {
+                deque.offer(Integer.parseInt(stk.nextToken()));
+            }
+            else if (s.equals("pop")) {
+                if (deque.isEmpty()) {
+                    sb.append(-1).append("\n");
+                } else {
+                    sb.append(deque.pop()).append("\n");;
+                }
+            }
+            else if (s.equals("size")) {
+                sb.append(deque.size()).append("\n");;
+            }
+            else if (s.equals("empty")) {
+                if (deque.isEmpty()) {
+                    sb.append(1).append("\n");
+                } else {
+                    sb.append(0).append("\n");
+                }
+            }
+            else if (s.equals("front")) {
+                if (deque.isEmpty()) {
+                    sb.append(-1).append("\n");
+                } else {
+                    sb.append(deque.getFirst()).append("\n");
+                }
+            }
+            else {
+                if (deque.isEmpty()) {
+                    sb.append(-1).append("\n");
+                } else {
+                    sb.append(deque.peekLast()).append("\n");
+                }
             }
         }
         System.out.println(sb);
