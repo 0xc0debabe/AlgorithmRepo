@@ -3,29 +3,27 @@ package Silver.V;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GomgomiWithABrightGreeting {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-        String m = br.readLine();
-        int answer = 0;
-        Map<String, Integer> map = new HashMap<>();
-        for (int i = 0; i < n - 1; i++) {
-            String k = br.readLine();
-            if (!k.equals("ENTER")) {
-                if (!map.containsKey(k)) {
-                    map.put(k, i + 1);
-                    answer++;
-                }
+
+        Set<String> set = new HashSet<>();
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            String nickname = br.readLine();
+
+            if (nickname.equals("ENTER")) {
+                cnt += set.size();
+                set.clear();
             } else {
-                answer = map.size();
-                map.clear();
+                set.add(nickname);
             }
         }
-
-        System.out.println(answer);
+        cnt += set.size();
+        System.out.println(cnt);
     }
 }
