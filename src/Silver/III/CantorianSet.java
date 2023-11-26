@@ -5,35 +5,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class CantorianSet {
-    static StringBuilder sb;
-
+    static char[] chars;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuilder sb = new StringBuilder();
         while (true) {
             String s = br.readLine();
             if (s == null) {
+                System.out.println(sb);
                 break;
             }
             int n = Integer.parseInt(s);
-            sb = new StringBuilder();
-            int pow = (int) Math.pow(3, n);
-            for (int i = 0; i < pow; i++) {
-                sb.append("-");
+            int cnt = (int)Math.pow(3, n);
+            chars = new char[cnt];
+            for (int i = 0; i < cnt; i++) {
+                chars[i] = '-';
             }
-
-            subStr(0, pow);
+            change(0, cnt);
+            for (int i = 0; i < cnt; i++) {
+                sb.append(chars[i]);
+            }
             System.out.println(sb);
+            sb.setLength(0);
         }
     }
-
-    static void subStr(int start, int end) {
-        if (end == 1) return;
-        int size = end / 3;
-
-        for (int i = start + size; i < start + 2 * size; i++) {
-            sb.setCharAt(i, ' ');
+    public static void change(int start, int end) {
+        if (end < 3) {
+            return;
         }
-        subStr(start, size);
-        subStr(start+2*size, size);
+        for (int i = start + end / 3; i < start + end / 3 * 2; i++) {
+            chars[i] = ' ';
+        }
+        change(start, end / 3);
+        change(start + end / 3 * 2, end / 3);
     }
 }
