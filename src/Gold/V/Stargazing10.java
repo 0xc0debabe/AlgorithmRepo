@@ -7,33 +7,31 @@ import java.io.InputStreamReader;
 public class Stargazing10 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+        StringBuilder sb = new StringBuilder();
+        char[][] starArr;
 
-        char[][] stars = new char[N][N];
-
-        // 배열 초기화
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                stars[i][j] = ' ';
+        int n = Integer.parseInt(br.readLine());
+        starArr = new char[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                starArr[i][j] = ' ';
             }
         }
 
-        // 재귀 함수 호출
-        drawStars(stars, 0, 0, N);
+        drawStars(starArr, 0, 0, n);
 
-        // 결과 출력
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < N; i++) {
-            sb.append(stars[i]);
-            sb.append('\n');
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                sb.append(starArr[i][j]);
+            }
+            sb.append("\n");
         }
-
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
-    static void drawStars(char[][] stars, int row, int col, int size) {
+    static void drawStars(char[][] starArr, int x, int y, int size) {
         if (size == 1) {
-            stars[row][col] = '*';
+            starArr[x][y] = '*';
             return;
         }
 
@@ -41,9 +39,9 @@ public class Stargazing10 {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (i == 1 && j == 1) {
-                    continue; // 가운데 칸은 비워둠
+                    continue;
                 }
-                drawStars(stars, row + i * newSize, col + j * newSize, newSize);
+                drawStars(starArr, x + i * newSize, y + j * newSize, newSize);
             }
         }
     }
