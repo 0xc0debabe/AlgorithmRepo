@@ -10,24 +10,22 @@ public class Stargazing10 {
         StringBuilder sb = new StringBuilder();
         char[][] starArr;
 
-        int n = Integer.parseInt(br.readLine());
-        starArr = new char[n][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                starArr[i][j] = ' ';
+            int n = Integer.parseInt(br.readLine());
+            starArr = new char[n][n];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    starArr[i][j] = ' ';
+                }
             }
-        }
 
-        drawStars(starArr, 0, 0, n);
+            drawStars(starArr, 0, 0, n);
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                sb.append(starArr[i][j]);
+            for (int i = 0; i < n; i++) {
+                sb.append(starArr[i]);
+                sb.append('\n');
             }
-            sb.append("\n");
+            System.out.println(sb);
         }
-        System.out.println(sb);
-    }
 
     static void drawStars(char[][] starArr, int x, int y, int size) {
         if (size == 1) {
