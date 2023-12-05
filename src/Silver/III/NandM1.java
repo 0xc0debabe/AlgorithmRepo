@@ -5,43 +5,42 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class NandM1 {
-    static int[] result;
     static boolean[] visited;
-    static int N, M;
+    static int[] arr;
+    static int n, m;
+    static StringBuilder sb = new StringBuilder();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
+        StringTokenizer stk = new StringTokenizer(br.readLine());
 
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
+        n = Integer.parseInt(stk.nextToken());
+        m = Integer.parseInt(stk.nextToken());
 
-        result = new int[M];
-        visited = new boolean[N + 1];
+        visited = new boolean[n + 1];
+        arr = new int[m];
+        findNumber(0);
 
-        dfs(0);
-
-        br.close();
+        System.out.println(sb);
     }
 
-    static void dfs(int depth) {
-        if (depth == M) {
-            for (int num : result) {
-                System.out.print(num + " ");
+    static void findNumber(int index) {
+        if (index == m) {
+            for (int i : arr) {
+                sb.append(i).append(" ");
             }
-            System.out.println();
+            sb.append("\n");
             return;
         }
 
-        for (int i = 1; i <= N; i++) {
+        for (int i = 1; i <= n; i++) {
             if (!visited[i]) {
                 visited[i] = true;
-                result[depth] = i;
-                dfs(depth + 1);
+                arr[index] = i;
+                findNumber(index + 1);
                 visited[i] = false;
             }
         }
+
     }
 }
-
-
