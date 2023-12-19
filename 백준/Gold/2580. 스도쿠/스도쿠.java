@@ -15,13 +15,12 @@ public class Main {
                 arr[i][j] = Integer.parseInt(stk.nextToken());
             }
         }
-        sudoku(0, 0);
-
+        sdoku(0, 0);
     }
 
-    static void sudoku(int row, int col) {
+    static void sdoku(int row, int col) {
         if (col == 9) {
-            sudoku(row + 1, 0);
+            sdoku(row + 1, 0);
             return;
         }
 
@@ -37,21 +36,24 @@ public class Main {
             System.exit(0);
         }
 
+
         if (arr[row][col] == 0) {
             for (int i = 1; i <= 9; i++) {
                 if (isPossible(row, col, i)) {
                     arr[row][col] = i;
-                    sudoku(row, col + 1);
+                    sdoku(row, col + 1);
                 }
             }
             arr[row][col] = 0;
             return;
         }
-        sudoku(row, col + 1);
+
+        sdoku(row, col + 1);
     }
+
     static boolean isPossible(int row, int col, int value) {
         for (int i = 0; i < 9; i++) {
-            if (arr[row][i] == value){
+            if (arr[row][i] == value) {
                 return false;
             }
         }
@@ -62,11 +64,11 @@ public class Main {
             }
         }
 
-        int set_row = (row / 3) * 3;
-        int set_col = (col / 3) * 3;
+        int newRow = (row / 3) * 3;
+        int newCol = (col / 3) * 3;
 
-        for (int i = set_row; i < set_row + 3; i++) {
-            for (int j = set_col; j < set_col + 3; j++) {
+        for (int i = newRow; i < newRow + 3; i++) {
+            for (int j = newCol; j < newCol + 3; j++) {
                 if (arr[i][j] == value) {
                     return false;
                 }
