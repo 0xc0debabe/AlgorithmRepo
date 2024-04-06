@@ -1,40 +1,35 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class Main {
-    static int n;
-    static int cnt = 0;
     static int[] arr;
+    static int cnt;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        n = Integer.parseInt(br.readLine());
+        int n = Integer.parseInt(br.readLine());
         arr = new int[n];
-        nQueen(0);
-        System.out.println(cnt);
+        System.out.println(nQueen(arr, 0, n));
     }
 
-    static void nQueen(int col) {
-        if (col == n) {
+    public static int nQueen(int[] arr, int row, int end) {
+        if (row >= end) {
             cnt++;
-            return;
+            return cnt;
         }
 
-        for (int i = 0; i < n; i++) {
-            arr[col] = i;
-            if (possible(col)) {
-                nQueen(col + 1);
+        for (int i = 0; i < arr.length; i++) {
+            arr[row] = i;
+            if (isQueen(arr, row)) {
+                nQueen(arr, row + 1, end);
             }
         }
-
+        return cnt;
     }
 
-    static boolean possible(int col) {
-        for (int i = 0; i < col; i++) {
-            if (arr[i] == arr[col]) {
-                return false;
-            } else if (Math.abs(arr[i] - arr[col]) == Math.abs(col - i)) {
+    public static boolean isQueen(int[] arr, int row) {
+        for (int i = 0; i < row; i++) {
+            if (arr[i] == arr[row] || row - i == Math.abs(arr[i] - arr[row])) {
                 return false;
             }
         }
