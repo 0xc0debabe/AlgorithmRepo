@@ -8,6 +8,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
         StringTokenizer stk;
         for (int i = 0; i < 9; i++) {
             stk = new StringTokenizer(br.readLine());
@@ -15,20 +16,20 @@ public class Main {
                 arr[i][j] = Integer.parseInt(stk.nextToken());
             }
         }
-        sdoku(0, 0);
+        solution(0, 0);
     }
 
-    static void sdoku(int row, int col) {
+    public static void solution(int row, int col) {
         if (col == 9) {
-            sdoku(row + 1, 0);
+            solution(row + 1, 0);
             return;
         }
 
         if (row == 9) {
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < 9; i++) {
-                for (int j = 0; j < 9; j++) {
-                    sb.append(arr[i][j]).append(' ');
+            for (int i[] : arr) {
+                for (int j : i) {
+                    sb.append(j).append(" ");
                 }
                 sb.append("\n");
             }
@@ -36,22 +37,21 @@ public class Main {
             System.exit(0);
         }
 
-
         if (arr[row][col] == 0) {
             for (int i = 1; i <= 9; i++) {
-                if (isPossible(row, col, i)) {
+                if (possibility(row, col, i)) {
                     arr[row][col] = i;
-                    sdoku(row, col + 1);
+                    solution(row, col + 1);
                 }
             }
             arr[row][col] = 0;
             return;
         }
 
-        sdoku(row, col + 1);
+        solution(row, col + 1);
     }
 
-    static boolean isPossible(int row, int col, int value) {
+    public static boolean possibility(int row, int col, int value) {
         for (int i = 0; i < 9; i++) {
             if (arr[row][i] == value) {
                 return false;
@@ -64,17 +64,16 @@ public class Main {
             }
         }
 
-        int newRow = (row / 3) * 3;
-        int newCol = (col / 3) * 3;
+        int set_row = row - row % 3;
+        int set_col = col - col % 3;
 
-        for (int i = newRow; i < newRow + 3; i++) {
-            for (int j = newCol; j < newCol + 3; j++) {
+        for (int i = set_row; i < set_row + 3; i++) {
+            for (int j = set_col; j < set_col + 3; j++) {
                 if (arr[i][j] == value) {
                     return false;
                 }
             }
         }
-
         return true;
     }
 }
