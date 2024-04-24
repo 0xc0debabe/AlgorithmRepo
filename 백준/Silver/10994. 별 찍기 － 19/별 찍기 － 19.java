@@ -16,12 +16,14 @@ public class Main {
         }
 
         printStarts(board, 0, 0, len, n);
+        StringBuilder sb = new StringBuilder();
         for (char[] chars : board) {
             for (char c : chars) {
-                System.out.print(c);
+                sb.append(c);
             }
-            System.out.println();
+            sb.append("\n");
         }
+        System.out.println(sb);
     }
 
     static void printStarts(char[][] board, int x, int y, int size, int n) {
