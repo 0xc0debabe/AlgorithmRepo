@@ -9,8 +9,13 @@ public class Main {
 
         int len = 4 * (n - 1) + 1;
         char[][] board = new char[len][len];
-        printStarts(board, 0, 0, len, n);
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                board[i][j] = ' ';
+            }
+        }
 
+        printStarts(board, 0, 0, len, n);
         for (char[] chars : board) {
             for (char c : chars) {
                 System.out.print(c);
@@ -26,13 +31,13 @@ public class Main {
         }
 
         for (int i = x; i < size + x; i++) {
-            for (int j = y; j < size + y; j++) {
-                if (i == x || j == y || i == size + x - 1 || j == size + y - 1) {
-                    board[i][j] = '*';
-                } else {
-                    board[i][j] = ' ';
-                }
-            }
+            board[i][x] = '*';
+            board[i][size + x - 1] = '*';
+        }
+
+        for (int i = y; i < size + y; i++) {
+            board[y][i] = '*';
+            board[size + y - 1][i] = '*';
         }
 
         int newSize = 4 * (n - 2) + 1;
