@@ -33,9 +33,6 @@ public class Main {
         for (int i = x; i < size + x; i++) {
             board[i][x] = '*';
             board[i][size + x - 1] = '*';
-        }
-
-        for (int i = y; i < size + y; i++) {
             board[y][i] = '*';
             board[size + y - 1][i] = '*';
         }
