@@ -28,12 +28,13 @@ public class Main {
         }
 
         int answer = 0;
-        for (int i = 1; i < n + 1; i++) {
+        for (int i = 1; i <= n; i++) {
             if (!isVisited[i]) {
                 answer++;
                 dfs(i);
             }
         }
+
         System.out.println(answer);
     }
 
@@ -41,6 +42,7 @@ public class Main {
         if (isVisited[idx]) {
             return;
         }
+
         isVisited[idx] = true;
         for (int value : lists[idx]) {
             if (!isVisited[value]) {
