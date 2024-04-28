@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int[][] visited;
+    static boolean[][] visited;
     static int[][] board;
     static int[] dx = {1, 0, -1, 0};
     static int[] dy = {0, 1, 0, -1};
@@ -14,7 +14,7 @@ public class Main {
         StringTokenizer stk = new StringTokenizer(br.readLine());
         int xSize = Integer.parseInt(stk.nextToken());
         int ySize = Integer.parseInt(stk.nextToken());
-        visited = new int[xSize + 2][ySize + 2];
+        visited = new boolean[xSize + 2][ySize + 2];
         board = new int[xSize + 2][ySize + 2];
 
 
@@ -26,31 +26,29 @@ public class Main {
             }
         }
 
-        final int MAX_VALUE = 10000;
 
-        for (int i = 0; i < xSize + 2; i++) {
-            for (int j = 0; j < ySize + 2; j++) {
-                visited[i][j] = MAX_VALUE;
-            }
-        }
-
-
-        visited[1][1] = 1;
         dfs(1, 1);
-        System.out.println(visited[xSize][ySize]);
+        System.out.println(board[xSize][ySize]);
     }
 
     static void dfs(int currPosX, int currPosY) {
-        for (int i = 0; i < 4; i++) {
-            int nextPosX = dx[i] + currPosX;
-            int nextPosY = dy[i] + currPosY;
+        Deque<int[]> deque = new ArrayDeque<>();
+        deque.addFirst(new int[]{currPosX, currPosY});
+        visited[currPosX][currPosY] = true;
 
-            if (board[nextPosX][nextPosY] == 1) {
-                if (visited[nextPosX][nextPosY] > visited[currPosX][currPosY] + 1) {
-                    visited[nextPosX][nextPosY] = visited[currPosX][currPosY] + 1;
-                    dfs(nextPosX, nextPosY);
+        while (!deque.isEmpty()) {
+            int[] currPos = deque.pollLast();
+            for (int i = 0; i < 4; i++) {
+                int nextPosX = dx[i] + currPos[0];
+                int nextPosY = dy[i] + currPos[1];
+
+                if (board[nextPosX][nextPosY] == 1) {
+                    visited[nextPosX][nextPosY] = true;
+                    board[nextPosX][nextPosY] = board[currPos[0]][currPos[1]] + 1;
+                    deque.addFirst(new int[]{nextPosX, nextPosY});
                 }
             }
+
         }
     }
 }
