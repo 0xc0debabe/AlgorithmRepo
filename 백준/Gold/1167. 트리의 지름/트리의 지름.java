@@ -43,18 +43,21 @@ public class Main {
         visited = new boolean[n + 1];
         distanceArr = new int[n + 1];
 
-        bfs(1);
+        dfs(1);
+//        bfs(1);
+
         int max = Integer.MIN_VALUE;
         int tmp = 0;
-        for (int i = 1; i <= n; i++) {
+        for (int i = 2; i < distanceArr.length; i++) {
             if (distanceArr[i] > max) {
                 max = distanceArr[i];
                 tmp = i;
             }
         }
-        Arrays.fill(distanceArr, 0);
         Arrays.fill(visited, false);
-        bfs(tmp);
+        Arrays.fill(distanceArr, 0);
+        dfs(tmp);
+//        bfs(tmp);
         Arrays.sort(distanceArr);
         System.out.println(distanceArr[n]);
     }
@@ -76,6 +79,19 @@ public class Main {
                     deque.addFirst(num);
                     distanceArr[num] = distanceArr[poll] + dist;
                 }
+            }
+        }
+    }
+
+    static void dfs(int num) {
+        visited[num] = true;
+        for (Node node : lists[num]) {
+            int linkedNum = node.linkedNum;
+            int dist = node.distance;
+
+            if (!visited[linkedNum]) {
+                distanceArr[linkedNum] = dist + distanceArr[num];
+                dfs(linkedNum);
             }
         }
     }
