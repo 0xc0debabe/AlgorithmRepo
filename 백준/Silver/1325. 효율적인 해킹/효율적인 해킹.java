@@ -8,7 +8,6 @@ public class Main {
     static boolean[] isVisited;
     static int[] answer;
     static List<Integer>[] lists;
-    static PriorityQueue<Integer> pq = new PriorityQueue<>((x, y) -> x - y);
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,15 +33,12 @@ public class Main {
             Arrays.fill(isVisited, false);
         }
 
+        StringBuilder sb = new StringBuilder();
         int max = Arrays.stream(answer).max().getAsInt();
         IntStream.range(1, answer.length)
                 .filter(i -> answer[i] == max)
-                .forEach(i -> pq.add(i));
+                .forEach(i -> sb.append(i).append(" "));
 
-        StringBuilder sb = new StringBuilder();
-        while (!pq.isEmpty()) {
-            sb.append(pq.poll()).append(" ");
-        }
         System.out.println(sb);
     }
 
@@ -57,8 +53,8 @@ public class Main {
             for (int item : lists[poll]) {
                 if (!isVisited[item]) {
                     isVisited[item] = true;
-                    deque.addFirst(item);
                     answer[item]++;
+                    deque.addFirst(item);
                 }
             }
         }
