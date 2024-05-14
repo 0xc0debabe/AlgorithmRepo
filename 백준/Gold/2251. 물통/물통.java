@@ -5,68 +5,82 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int[] sender = {0, 0, 1, 1, 2, 2};
-    static int[] receiver = {1, 2, 0, 2, 0, 1};
-    static boolean[][] visited;
-    static boolean[] answer;
-    static int[] now;
+    static int[] capacity;
+    static boolean[][] isVisited = new boolean[201][201];
+    static Set<Integer> set = new TreeSet<>();
 
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer stk = new StringTokenizer(br.readLine());
-        now = new int[3];
-        now[0] = Integer.parseInt(stk.nextToken());
-        now[1] = Integer.parseInt(stk.nextToken());
-        now[2] = Integer.parseInt(stk.nextToken());
-        visited = new boolean[201][201];
-        answer = new boolean[201];
-        bfs();
-        for (int i = 0; i < answer.length; i++) {
-            if (answer[i]) {
-                System.out.print(i + " ");
-            }
+
+        capacity = new int[3];
+        for (int i = 0; i < 3; i++) {
+            capacity[i] = Integer.parseInt(stk.nextToken());
         }
+
+        dfs(0, 0, capacity[2]);
+
+        StringBuilder sb = new StringBuilder();
+        for (int value : set) {
+            sb.append(value).append(" ");
+        }
+
+        System.out.println(sb);
     }
 
-    private static void bfs() {
-        Queue<AB> queue = new LinkedList<>();
-        queue.add(new AB(0, 0));
-        visited[0][0] = true;
-        answer[now[2]] = true;
-        while (!queue.isEmpty()) {
-            AB p = queue.poll();
-            int A = p.A;
-            int B = p.B;
-            int C = now[2] - A - B;
-            for (int i = 0; i < 6; i++) {
-                int[] next = {A, B, C};
-                next[receiver[i]] += next[sender[i]];
-                next[sender[i]] = 0;
-                if (next[receiver[i]] > now[receiver[i]]) {
-                    next[sender[i]] = next[receiver[i]] - now[receiver[i]];
-                    next[receiver[i]] = now[receiver[i]];
-                }
-                if (!visited[next[0]][next[1]]) {
-                    visited[next[0]][next[1]] = true;
-                    queue.add(new AB(next[0], next[1]));
-                    if (next[0] == 0) {
-                        answer[next[2]] = true;
-                    }
-                }
-            }
+    public static void dfs(int a, int b, int c) {
+        if (isVisited[a][b]) {
+            return;
         }
-    }
+
+        if (a == 0) {
+            set.add(c);
+        }
+        isVisited[a][b] = true;
+
+        //        0 -> 1
+        if (a + b > capacity[1]) {
+            dfs(a + b - capacity[1], capacity[1], c);
+        } else {
+            dfs(0, a + b, c);
+        }
+
+//        0 -> 2
+//        if (a + c > capacity[2]) {
+//            dfs(a - (capacity[2] - c), b, capacity[2]);
+//        } else {
+//            dfs(0, b, a + c);
+//        }
+        dfs(a, 0, b+c);
+
+//        1 -> 0
+        if (b + a > capacity[0]) {
+            dfs(capacity[0], a + b - capacity[0], c);
+        } else {
+            dfs(a + b, 0, c);
+        }
+
+        //        1 -> 2
+//        if (b + c > capacity[2]) {
+//            dfs(a, b - (capacity[2] - c), capacity[2]);
+//        } else {
+//            dfs(a, 0, b + c);
+//        }
+        dfs(0, b, a+c);
 
 
-}
+        //        2 -> 0
+        if (a + c > capacity[0]) {
+            dfs(capacity[0], b, a + c - capacity[0]);
+        } else {
+            dfs(a + c, b, 0);
+        }
+//        2 -> 1
+        if (b + c > capacity[1]) {
+            dfs(a, capacity[1], c + b - capacity[1]);
+        } else {
+            dfs(a, b + c, 0);
+        }
 
-class AB {
-    int A;
-    int B;
-
-    public AB(int a, int b) {
-        A = a;
-        B = b;
     }
 }
