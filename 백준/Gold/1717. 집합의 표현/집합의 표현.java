@@ -39,9 +39,9 @@ public class Main {
         a = find(a);
         b = find(b);
 
-        if (a != b) {
+//        if (a != b) {
             parent[b] = a;
-        }
+//        }
     }
 
     private static int find(int a) {
