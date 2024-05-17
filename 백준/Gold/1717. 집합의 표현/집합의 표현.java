@@ -7,16 +7,19 @@ import java.util.*;
 public class Main {
     static int[] parent;
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer stk = new StringTokenizer(br.readLine());
+
         int n = Integer.parseInt(stk.nextToken());
         int m = Integer.parseInt(stk.nextToken());
+
         parent = new int[n + 1];
         for (int i = 0; i <= n; i++) {
             parent[i] = i;
         }
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < m; i++) {
             stk = new StringTokenizer(br.readLine());
             int question = Integer.parseInt(stk.nextToken());
@@ -25,39 +28,34 @@ public class Main {
             if (question == 0) {
                 union(a, b);
             } else {
-                if (checkSame(a, b)) {
-                    System.out.println("YES");
-                } else {
-                    System.out.println("NO");
-                } 
-            } 
-            
+                boolean check = check(a, b);
+                sb.append(check ? "YES" : "NO").append("\n");
+            }
         }
-        
-    }
-
-    private static boolean checkSame(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if (a == b) {
-            return true;
-        }
-        return false;
+        System.out.println(sb);
     }
 
     private static void union(int a, int b) {
         a = find(a);
         b = find(b);
+
         if (a != b) {
             parent[b] = a;
         }
     }
 
     private static int find(int a) {
-        if (a == parent[a]) {
+        if (parent[a] == a) {
             return a;
         } else {
             return parent[a] = find(parent[a]);
         }
+    }
+
+    private static boolean check(int a, int b) {
+        a = find(a);
+        b = find(b);
+
+        return a == b;
     }
 }
