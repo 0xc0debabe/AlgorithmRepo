@@ -19,7 +19,7 @@ public class Main {
             int time = Integer.parseInt(st.nextToken());
             nodes[i] = new Node(start, end, time);
         }
-        
+
         distance[1] = 0;
         for (int i = 1; i < n; i++) {
             for (int j = 0; j < m; j++) {
@@ -30,14 +30,17 @@ public class Main {
                 }
             }
         }
+        
         boolean mCycle = false;
         for (int i = 0; i < m; i++) {
             Node node = nodes[i];
             if (distance[node.start] != Integer.MAX_VALUE
                     && distance[node.end] > distance[node.start] + node.weight) {
                 mCycle = true;
+                break;
             }
         }
+
         if (!mCycle) {
             for (int i = 2; i <= n; i++) {
                 if (distance[i] == Integer.MAX_VALUE) {
@@ -48,7 +51,7 @@ public class Main {
             }
         } else {
             System.out.println("-1");
-        } 
+        }
     }
 }
 
