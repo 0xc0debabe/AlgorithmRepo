@@ -2,49 +2,46 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Main {
+    static List<List<Integer>> lists;
+    static boolean[] isVisited;
+    static int[] answer;
+
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
         int n = Integer.parseInt(br.readLine());
-        boolean[] visited = new boolean[n + 1];
-        int[] answer = new int[n + 1];
-        List<Integer>[] lists = new ArrayList[n + 1];
+
+        lists = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
-            lists[i] = new ArrayList<>();
+            lists.add(new ArrayList<>());
         }
+        isVisited = new boolean[n + 1];
+        answer = new int[n + 1];
 
-        StringTokenizer stk;
         for (int i = 1; i < n; i++) {
-            stk = new StringTokenizer(br.readLine());
-            int num1 = Integer.parseInt(stk.nextToken());
-            int num2 = Integer.parseInt(stk.nextToken());
-
-            lists[num1].add(num2);
-            lists[num2].add(num1);
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            lists.get(a).add(b);
+            lists.get(b).add(a);
         }
 
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(1);
-        visited[1] = true;
+        dfs(1);
+        IntStream.range(2, n + 1).forEach(x -> System.out.println(answer[x]));
+    }
 
-        while (!queue.isEmpty()) {
-            int cur = queue.poll();
+    static void dfs(int n) {
+        isVisited[n] = true;
 
-            for (int next : lists[cur]) {
-                if (visited[next]) {
-                    continue;
-                }
-
-                queue.add(next);
-                visited[next] = true;
-                answer[next] = cur;
+        for (int value : lists.get(n)) {
+            if (!isVisited[value]) {
+                answer[value] = n;
+                dfs(value);
             }
         }
 
-        for (int i = 2; i <= n; i++) {
-            System.out.println(answer[i]);
-        }
     }
 }
