@@ -24,7 +24,7 @@ public class Main {
                 root = i;
                 continue;
             }
-            lists.get(i).add(num);
+//            lists.get(i).add(num);
             lists.get(num).add(i);
         }
 
