@@ -39,8 +39,6 @@ public class Main {
                 s = s + leftNodeStartIndex;
                 e = e + leftNodeStartIndex;
                 System.out.println(getSum(s, (int) e));
-            } else {
-                return;
             }
         }
     }
