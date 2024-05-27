@@ -19,16 +19,9 @@ public class Main {
             dp[i][1] = i;
         }
 
-//        for (int i = 1; i <= n; i++) {
-//            for (int j = 1; j <= n; j++) {
-//                dp[i][j] = dp[i - 1][j - 1] % MOD + dp[i - 1][j] % MOD;
-//            }
-//        }
-
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
-                dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];
-                dp[i][j] = dp[i][j] % MOD;
+                dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j]) % MOD;
             }
         }
 
