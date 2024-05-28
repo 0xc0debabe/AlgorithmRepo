@@ -4,42 +4,24 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
-    static int answer;
-    static int[] time;
-    static int[] price;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
-        time = new int[n + 1];
-        price = new int[n + 1];
-        StringTokenizer st;
+        int[] d = new int[n + 2];
+        int[] t = new int[n + 1];
+        int[] p = new int[n + 1];
         for (int i = 1; i <= n; i++) {
-            st = new StringTokenizer(br.readLine());
-            time[i] = Integer.parseInt(st.nextToken());
-            price[i] = Integer.parseInt(st.nextToken());
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            t[i] = Integer.parseInt(st.nextToken());
+            p[i] = Integer.parseInt(st.nextToken());
         }
-
-        answer = Integer.MIN_VALUE;
-
-        for (int i = 1; i <= n; i++) {
-            dfs(i, 0);
+        for (int i = n; i > 0; i--) {
+            if (i + t[i] > n + 1) {
+                d[i] = d[i + 1];
+            } else {
+                d[i] = Math.max(d[i + 1], p[i] + d[i + t[i]]);
+            }
         }
-
-        System.out.println(answer);
-    }
-
-    static void dfs(int currDay, int totalPrice) {
-        if (currDay >= time.length || time.length < time[currDay] + currDay) {
-            answer = Math.max(answer, totalPrice);
-            return;
-        }
-
-        totalPrice += price[currDay];
-        currDay += time[currDay];
-
-        for (int i = currDay; i <= time.length; i++) {
-            dfs(i, totalPrice);
-        }
+        System.out.println(d[1]);
     }
 }
