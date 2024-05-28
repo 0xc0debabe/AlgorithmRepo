@@ -42,6 +42,7 @@ public class Main {
             for (int i = 1; i <= n; i++) {
                 s[i] = Integer.parseInt(st.nextToken());
                 long cnt = 0;
+
                 for (int j = 1; j < s[i]; j++) {
                     if (!visited[j]) {
                         cnt++;
