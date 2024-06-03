@@ -11,8 +11,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         char[] a = br.readLine().toCharArray();
         char[] b = br.readLine().toCharArray();
-        long[][] dp = new long[a.length + 1][b.length + 1];
-
+        int[][] dp = new int[a.length + 1][b.length + 1];
         for (int i = 1; i <= a.length; i++) {
             for (int j = 1; j <= b.length; j++) {
                 if (a[i - 1] == b[j - 1]) {
@@ -22,20 +21,17 @@ public class Main {
                 }
             }
         }
-
         StringBuilder sb = new StringBuilder();
         sb.append(dp[a.length][b.length]).append("\n");
-        getText(a.length, b.length,a ,b, dp);
+        getText(a.length, b.length, a, b, dp);
         for (int i = list.size() - 1; i >= 0; i--) {
             sb.append(list.get(i));
         }
         System.out.println(sb);
     }
 
-    public static void getText(int i, int j, char[] a, char[] b, long[][] dp) {
-        if (i == 0 || j == 0) {
-            return;
-        }
+    private static void getText(int i, int j, char[] a, char[] b, int[][] dp) {
+        if (i == 0 || j == 0) return;
         if (a[i - 1] == b[j - 1]) {
             list.add(a[i - 1]);
             getText(i - 1, j - 1, a, b, dp);
