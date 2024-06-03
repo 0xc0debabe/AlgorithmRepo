@@ -2,19 +2,17 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
+import java.util.List;
 
 public class Main {
-    private static long[][] dp;
-    private static ArrayList<Character> path;
-    private static char[] a;
-    private static char[] b;
-    public static void main(String[] args) throws IOException {
+    static List<Character> list = new ArrayList<>();
+
+    public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        a = br.readLine().toCharArray();
-        b = br.readLine().toCharArray();
-        dp = new long[a.length + 1][b.length + 1];
-        path = new ArrayList<>();
+        char[] a = br.readLine().toCharArray();
+        char[] b = br.readLine().toCharArray();
+        long[][] dp = new long[a.length + 1][b.length + 1];
+
         for (int i = 1; i <= a.length; i++) {
             for (int j = 1; j <= b.length; j++) {
                 if (a[i - 1] == b[j - 1]) {
@@ -24,24 +22,28 @@ public class Main {
                 }
             }
         }
-        System.out.println(dp[a.length][b.length]);
-        getText(a.length, b.length);
-        for (int i = path.size() - 1; i >= 0; i--) {
-            System.out.print(path.get(i));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(dp[a.length][b.length]).append("\n");
+        getText(a.length, b.length,a ,b, dp);
+        for (int i = list.size() - 1; i >= 0; i--) {
+            sb.append(list.get(i));
         }
-        System.out.println();
+        System.out.println(sb);
     }
 
-    private static void getText(int r, int c) {
-        if (r == 0 || c == 0) return;
-        if (a[r - 1] == b[c - 1]) {
-            path.add(a[r - 1]);
-            getText(r - 1, c - 1);
+    public static void getText(int i, int j, char[] a, char[] b, long[][] dp) {
+        if (i == 0 || j == 0) {
+            return;
+        }
+        if (a[i - 1] == b[j - 1]) {
+            list.add(a[i - 1]);
+            getText(i - 1, j - 1, a, b, dp);
         } else {
-            if (dp[r - 1][c] > dp[r][c - 1]) {
-                getText(r - 1, c);
+            if (dp[i - 1][j] > dp[i][j - 1]) {
+                getText(i - 1, j, a, b, dp);
             } else {
-                getText(r, c - 1);
+                getText(i, j - 1, a, b, dp);
             }
         }
     }
