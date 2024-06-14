@@ -9,6 +9,7 @@ public class Main {
         int t = Integer.parseInt(br.readLine());
 
         StringTokenizer st;
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < t; i++) {
             int size = Integer.parseInt(br.readLine());
             int[][] board = new int[2][size + 1];
@@ -28,7 +29,8 @@ public class Main {
                 dp[1][j] = Math.max(dp[0][j - 1], dp[0][j - 2]) + board[1][j];
             }
 
-            System.out.println(Math.max(dp[0][size], dp[1][size]));
+            sb.append(Math.max(dp[0][size], dp[1][size])).append("\n");
         }
+        System.out.println(sb);
     }
 }
