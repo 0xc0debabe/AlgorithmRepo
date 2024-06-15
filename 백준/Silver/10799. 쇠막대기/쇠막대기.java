@@ -9,13 +9,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String pipe = br.readLine();
-        Stack<Character> stack = new Stack<>();
+        Deque<Character> stack = new ArrayDeque<>();
         int result = 0;
         for(int i=0; i<pipe.length();i++) {
             if (pipe.charAt(i) == '(') {
-                stack.push('(');
+                stack.addFirst('(');
             } else if (pipe.charAt(i) == ')') {
-                stack.pop();
+                stack.pollLast();
             }
             if (i > 0) {
                 if (pipe.charAt(i - 1) == '(' && pipe.charAt(i) ==')') {
