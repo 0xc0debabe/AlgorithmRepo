@@ -10,40 +10,24 @@ public class Main {
 
         for (int i = 0; i < t; i++) {
             int n = Integer.parseInt(br.readLine());
-            List<Node> list = new ArrayList<>();
 
+            int[] arr = new int[n + 1];
             for (int j = 0; j < n; j++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 int a = Integer.parseInt(st.nextToken());
                 int b = Integer.parseInt(st.nextToken());
-                list.add(new Node(a, b));
+                arr[a] = b;
             }
 
-            Collections.sort(list);
             int cnt = 0;
-
-            int min = list.get(0).b;
-            for (Node node : list) {
-                if (node.b <= min) {
+            int min = arr[1];
+            for (int j = 1; j <= n; j++) {
+                if (min >= arr[j]) {
                     cnt++;
-                    min = node.b;
+                    min = arr[j];
                 }
             }
             System.out.println(cnt);
         }
-    }
-}
-
-class Node implements Comparable<Node>{
-    int a;
-    int b;
-
-    public Node(int a, int b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    public int compareTo(Node node) {
-        return this.a - node.a;
     }
 }
