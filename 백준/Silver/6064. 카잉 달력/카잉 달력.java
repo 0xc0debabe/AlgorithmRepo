@@ -10,28 +10,26 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int t = Integer.parseInt(br.readLine());
 
-        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < t; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int M = Integer.parseInt(st.nextToken());
-            int N = Integer.parseInt(st.nextToken());
-            int x = Integer.parseInt(st.nextToken());
-            int y = Integer.parseInt(st.nextToken());
-            int lcm = M * N / gcd(M, N);
-            int n = 0;
-            int ans = -1;
-            while (n * M < lcm) {
-                if ((n * M + x - y) % N == 0) {
-                    ans = n * M + x;
+            int m = Integer.parseInt(st.nextToken());
+            int n = Integer.parseInt(st.nextToken());
+            int x = Integer.parseInt(st.nextToken()) - 1;
+            int y = Integer.parseInt(st.nextToken()) - 1;
+            boolean check = false;
+            for (int j = x; j < (n * m); j += m) {
+                if (j % n == y) {
+                    System.out.println(j + 1);
+                    check = true;
                     break;
                 }
-                n++;
             }
 
-            System.out.println(ans);
-        }
+            if (!check) {
+                System.out.println(-1);
 
-        System.out.println(sb);
+            }
+        }
     }
 
     static int gcd(int a, int b) {
