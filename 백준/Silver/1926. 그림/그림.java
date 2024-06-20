@@ -1,14 +1,12 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
     static int[][] board;
     static int n, m;
-    static int answer, tmp;
+    static int answer;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,8 +26,8 @@ public class Main {
         answer = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                tmp = 0;
-                if (dfs(i, j, 0, 0)) {
+                if (board[i][j] == 1) {
+                    int tmp = dfs(i, j);
                     answer = Math.max(answer, tmp);
                     cnt++;
                 }
@@ -39,17 +37,17 @@ public class Main {
         System.out.println(answer);
     }
 
-    static boolean dfs(int x, int y, int depth, int sum) {
+    static int dfs(int x, int y) {
         if (x < 0 || y < 0 || x >= n || y >= m || board[x][y] == 0) {
-            return false;
+            return 0;
         }
 
         board[x][y] = 0;
-        tmp++;
-        dfs(x + 1, y, depth + 1, sum + 1);
-        dfs(x - 1, y, depth + 1, sum + 1);
-        dfs(x, y + 1, depth + 1, sum + 1);
-        dfs(x, y - 1, depth + 1, sum + 1);
-        return true;
+        int sum = 1;
+        sum += dfs(x + 1, y);
+        sum += dfs(x - 1, y);
+        sum += dfs(x, y + 1);
+        sum += dfs(x, y - 1);
+        return sum;
     }
 }
