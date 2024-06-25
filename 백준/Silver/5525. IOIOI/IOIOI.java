@@ -7,24 +7,26 @@ class Main{
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String tmp = "";
         int n = Integer.parseInt(br.readLine());
-        for (int i = 0; i < n; i++) {
-            tmp = tmp.concat("IO");
-        }
-        tmp += "I";
         int length = Integer.parseInt(br.readLine());
         String s = br.readLine();
 
-        int answer = 0;
-        while (s.length() > 0) {
-            if (s.startsWith(tmp)) {
-                answer++;
-                s = s.substring(2);
+
+        int cnt = 0;
+        int result = 0;
+        for (int i = 1; i < length - 1; i++) {
+            if (s.charAt(i - 1) == 'I' && s.charAt(i) == 'O' && s.charAt(i + 1) == 'I') {
+                cnt++;
+                if (cnt == n) {
+                    cnt--;
+                    result++;
+                }
+                i++;
             } else {
-                s = s.substring(1);
+                cnt = 0;
             }
         }
-        System.out.println(answer);
+
+        System.out.println(result);
     }
 }
