@@ -30,7 +30,8 @@ class Main {
         } else {
             answer2 = h - tmp2 % h;
         }
-
-        System.out.println(answer1 + " " + answer2);
+        StringBuilder sb = new StringBuilder();
+        sb.append(answer1).append(" ").append(answer2);
+        System.out.println(sb);
     }
 }
