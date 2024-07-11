@@ -1,14 +1,14 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.*;
 
-class Main {
+public class Main {
     static int[][] board;
-    static List<Node> list = new ArrayList<>();
     static int n, m, answer;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, -1, 1};
+    static List<Node> list = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,9 +22,7 @@ class Main {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < m; j++) {
                 board[i][j] = Integer.parseInt(st.nextToken());
-                if (board[i][j] == 2) {
-                    list.add(new Node(i, j));
-                }
+                if (board[i][j] == 2) list.add(new Node(i, j));
             }
         }
 
@@ -34,38 +32,36 @@ class Main {
 
     static void dfs(int depth, int idx) {
         if (depth == 3) {
-            bfs(arrCopy());
+            bfs(copyArr());
             return;
         }
 
         for (int i = idx; i < n * m; i++) {
-            int row = i / m;
-            int col = i % m;
+            int r = i / m;
+            int c = i % m;
 
-            if (board[row][col] == 0) {
-                board[row][col] = 1;
+            if (board[r][c] == 0) {
+                board[r][c] = 1;
                 dfs(depth + 1, i + 1);
-                board[row][col] = 0;
+                board[r][c] = 0;
             }
         }
-
     }
 
-    static void bfs(int[][] dupBoard) {
-        Queue<Node> queue = new LinkedList<>();
-        for (Node node : list) {
-            queue.add(new Node(node.row, node.col));
-        }
+    static void bfs(int[][] dupArr) {
+        Queue<Node> queue = new LinkedList<>(list);
 
         while (!queue.isEmpty()) {
             Node poll = queue.poll();
+            int row = poll.row;
+            int col = poll.col;
 
             for (int i = 0; i < 4; i++) {
-                int nx = poll.row + dx[i];
-                int ny = poll.col + dy[i];
+                int nx = row + dx[i];
+                int ny = col + dy[i];
 
-                if (nx >= 0 && ny >= 0 && nx < n && ny < m && dupBoard[nx][ny] == 0) {
-                    dupBoard[nx][ny] = 2;
+                if (nx >= 0 && ny >= 0 && nx < n && ny < m && dupArr[nx][ny] == 0) {
+                    dupArr[nx][ny] = 2;
                     queue.add(new Node(nx, ny));
                 }
             }
@@ -74,7 +70,7 @@ class Main {
         int cnt = 0;
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (dupBoard[i][j] == 0) {
+                if (dupArr[i][j] == 0) {
                     cnt++;
                 }
             }
@@ -83,15 +79,13 @@ class Main {
         answer = Math.max(answer, cnt);
     }
 
-    static int[][] arrCopy() {
-        int[][] copy = new int[n][m];
+    static int[][] copyArr() {
+        int[][] dupArr = new int[n][m];
         for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                copy[i][j] = board[i][j];
-            }
+            if (m >= 0) System.arraycopy(board[i], 0, dupArr[i], 0, m);
         }
 
-        return copy;
+        return dupArr;
     }
 }
 
