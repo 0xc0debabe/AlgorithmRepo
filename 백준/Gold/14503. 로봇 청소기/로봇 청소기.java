@@ -53,20 +53,15 @@ public class Main {
                 return;
             }
         } else {
-            boolean check = false;
-            int nx = 0; int ny = 0;
-            for (int i = 0; i < 4; i++) {
-                robotDir = (robotDir + 3) % 4;
-                nx = robotRow + dx2[robotDir];
-                ny = robotCol + dy2[robotDir];
+            robotDir = (robotDir + 3) % 4;
+            int nx = robotRow + dx2[robotDir];
+            int ny = robotCol + dy2[robotDir];
 
-                if (board[nx][ny] == 0) {
-                    check = true;
-                    break;
-                }
+            if (board[nx][ny] == 0) {
+                solution(nx, ny, robotDir);
+            } else {
+                solution(robotRow, robotCol, robotDir);
             }
-
-            if (check) solution(nx, ny, robotDir);
         }
     }
 
