@@ -12,10 +12,10 @@ public class Main {
     static int[][] gears = new int[5][9];
     static int[][] pointer = {
             {-1, -1, -1},
-            {-1, -1, 2},
             {-1, 6, 2},
             {-1, 6, 2},
-            {-1, 6, -1},
+            {-1, 6, 2},
+            {-1, 6, 2},
     };
 
     public static void main(String[] args) throws IOException {
@@ -40,16 +40,16 @@ public class Main {
         }
 
         int answer = 0;
-        for (int i = 1; i <= 3; i++) {
+        for (int i = 1; i <= 4; i++) {
             int tmp = (pointer[i][2] + 6) % 8;
             if (gears[i][tmp] == 1) {
                 answer += (int) Math.pow(2, i - 1);
             }
         }
-        int tmp = (pointer[4][1] + 2) % 8;
-        if (gears[4][tmp] == 1) {
-            answer += (int) Math.pow(2, 4 - 1);
-        }
+//        int tmp = (pointer[4][1] + 2) % 8;
+//        if (gears[4][tmp] == 1) {
+//            answer += (int) Math.pow(2, 4 - 1);
+//        }
 
         System.out.println(answer);
     }
