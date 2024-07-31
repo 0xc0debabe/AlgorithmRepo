@@ -25,42 +25,40 @@ public class Main {
             list.get(s).add(new Node(e, c));
             list.get(e).add(new Node(s, c));
         }
-
-        System.out.println(prim());
+        System.out.println(prim(1));
     }
 
-    static int prim() {
-        PriorityQueue<Node> pq = new PriorityQueue<>((x, y) -> x.coast - y.coast);
-        pq.add(new Node(1, 0));
-        int totalCoast = 0;
+    static int prim(int start) {
+        PriorityQueue<Node> pq = new PriorityQueue<>((x, y) -> x.weight - y.weight);
+        int totalWeight = 0;
+        pq.add(new Node(start, 0));
 
         while (!pq.isEmpty()) {
             Node now = pq.poll();
             int vertex = now.vertex;
-            int coast = now.coast;
+            int weight = now.weight;
 
             if (isVisited[vertex]) continue;
 
             isVisited[vertex] = true;
-            totalCoast += coast;
+            totalWeight += weight;
 
             for (Node next : list.get(vertex)) {
-                if (!isVisited[next.vertex]) {
-                    pq.add(next);
-                }
+                pq.add(next);
             }
         }
 
-        return totalCoast;
+        return totalWeight;
     }
 }
 
+
 class Node {
     int vertex;
-    int coast;
+    int weight;
 
-    public Node(int vertex, int coast) {
+    public Node(int vertex, int weight) {
         this.vertex = vertex;
-        this.coast = coast;
+        this.weight = weight;
     }
 }
