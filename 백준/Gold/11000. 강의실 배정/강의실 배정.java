@@ -9,23 +9,26 @@ public class Main {
         int n = Integer.parseInt(br.readLine());
 
         Node[] nodes = new Node[n];
+
         for (int i = 0; i < n; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
-            nodes[i] = new Node(start, end);
+            int s = Integer.parseInt(st.nextToken());
+            int e = Integer.parseInt(st.nextToken());
+
+            nodes[i] = new Node(s, e);
         }
 
         Arrays.sort(nodes);
 
         PriorityQueue<Integer> pq = new PriorityQueue<>();
         pq.add(nodes[0].end);
+        
         for (int i = 1; i < n; i++) {
             if (pq.peek() <= nodes[i].start) {
                 pq.poll();
             }
-
-            pq.offer(nodes[i].end);
+            
+            pq.add(nodes[i].end);
         }
 
         System.out.println(pq.size());
@@ -47,5 +50,4 @@ class Node implements Comparable<Node>{
         }
         return this.start - node.start;
     }
-
 }
