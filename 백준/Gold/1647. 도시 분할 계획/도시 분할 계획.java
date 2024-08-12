@@ -47,6 +47,7 @@ public class Main {
             isVisited[now.vertex] = true;
 
             for (Node next : list.get(now.vertex)) {
+                if (isVisited[next.vertex]) continue;
                 pq.add(new Node(next.vertex, next.cost));
             }
         }
