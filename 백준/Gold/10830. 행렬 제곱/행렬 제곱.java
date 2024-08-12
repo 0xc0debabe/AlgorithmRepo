@@ -14,7 +14,6 @@ public class Main {
         n = Integer.parseInt(st.nextToken());
         long b = Long.parseLong(st.nextToken());
         arr = new int[n][n];
-
         for (int i = 0; i < n; i++) {
             st = new StringTokenizer(br.readLine());
             for (int j = 0; j < n; j++) {
@@ -22,46 +21,48 @@ public class Main {
             }
         }
 
-        int[][] result = fastPowMatrix(arr, b);
+        int[][] ints = matrixFastPow(b);
 
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                sb.append(result[i][j]).append(' ');
+                sb.append(ints[i][j]).append(' ');
             }
-            sb.append("\n");
+            sb.append('\n');
         }
 
         System.out.println(sb);
     }
 
-    static int[][] fastPowMatrix(int[][] matrix, long exp) {
-        if (exp == 1L) return matrix;
-
-        int[][] res = fastPowMatrix(matrix, exp / 2);
-
-        res = multiply(res, res);
-
-        if (exp % 2 == 1L) {
-            res = multiply(res, arr);
+    static int[][] matrixFastPow(long b) {
+        if (b == 1) {
+            return arr;
         }
 
-        return res;
+        int[][] result = matrixFastPow(b / 2);
+
+        result = matrixMultiply(result, result);
+
+        if (b % 2 == 1) {
+            result = matrixMultiply(result, arr);
+        }
+
+        return result;
     }
 
-    static int[][] multiply(int[][] o1, int[][] o2) {
-        int[][] res = new int[n][n];
+    static int[][] matrixMultiply(int[][] o1, int[][] o2) {
+        int[][] result = new int[n][n];
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
-                    res[i][j] += o1[i][k] * o2[k][j];
-                    res[i][j] %= MOD;
+                    result[i][j] += (o1[i][k] * o2[k][j]) % MOD;
+                    result[i][j] %= MOD;
                 }
             }
         }
 
-        return res;
+        return result;
     }
 }
