@@ -28,31 +28,28 @@ public class Main {
         System.out.println(sb);
     }
 
-    static void dfs(int d) {
-        if(d==81) {
+    static void dfs(int depth) {
+        if (depth == 81){
             flag = true;
             return;
         }
 
-        int r = d/9;
-        int c = d%9;
 
-        if(board[r][c]!=0)
-            dfs(d+1);
-        else {
-            for(int i=1;i<10;i++) {
-                if(!isValid(r,c,i))continue;
-                board[r][c] = i;
-                dfs(d+1);
+        int row = depth / 9;
+        int col = depth % 9;
 
-                // 종료 조건이 아니라면 더이상 선택할 수가 없다는 뜻 => 백트랙킹
-
-                if(flag) return;
-                board[r][c]=0;
-
+        if (board[row][col] == 0) {
+            for (int i = 1; i <= 9; i++) {
+                if (isValid(row, col, i)) {
+                    board[row][col] = i;
+                    dfs(depth + 1);
+                    if (flag) return;
+                    board[row][col] = 0;
+                }
             }
+        } else {
+            dfs(depth + 1);
         }
-
     }
 
     static boolean isValid(int row, int col, int target) {
