@@ -22,13 +22,10 @@ public class Main {
 
     static void dfs(long target) {
         list.add(target);
-        long modValue = target % 10;
-        if (modValue == 0) return;
-
-        for (long i = modValue - 1; i >= 0; i--) {
-            long newValue = target * 10 + i;
-            dfs(newValue);
+        long tmp = target % 10;
+        if (tmp == 0) return;
+        for (long i = tmp - 1; i >= 0; i--) {
+            dfs(target * 10 + i);
         }
-
     }
 }
