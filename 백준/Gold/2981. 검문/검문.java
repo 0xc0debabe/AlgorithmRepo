@@ -1,5 +1,8 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
 
@@ -18,10 +21,22 @@ public class Main {
             val = gcd(val, arr[i] - arr[i - 1]);
         }
 
+
         StringBuilder sb = new StringBuilder();
-        for (int i = 2; i <= val; i++) {
-            if (val % i == 0) sb.append(i).append(' ');
+        List<Integer> list = new ArrayList<>();
+        for (int i = 2; i <= Math.sqrt(val); i++) {
+            if (i * i == val) {
+                list.add(i);
+            } else if (val % i == 0) {
+                list.add(i);
+                list.add(val / i);
+            }
         }
+        Collections.sort(list);
+        for (int v : list) {
+            sb.append(v).append(' ');
+        }
+        sb.append(val);
         System.out.println(sb);
     }
 
