@@ -23,11 +23,10 @@ public class Main {
             lists.get(i).add(arr[1][i]);
         }
 
-        isVisited = new boolean[n + 1];
         for (int i = 1; i <= n; i++) {
+            isVisited = new boolean[n + 1];
             isVisited[i] = true;
             dfs(i, i);
-            isVisited[i] = false;
         }
 
         Collections.sort(answer);
@@ -44,7 +43,6 @@ public class Main {
             if (!isVisited[v]) {
                 isVisited[v] = true;
                 dfs(v, target);
-                isVisited[v] = false;
             } else if (v == target) {
                 answer.add(v);
                 return;
