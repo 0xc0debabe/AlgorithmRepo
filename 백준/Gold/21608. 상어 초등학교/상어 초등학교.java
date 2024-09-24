@@ -1,3 +1,8 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+
 import java.util.*;
 
 public class Main {
@@ -8,18 +13,19 @@ public class Main {
     static Map<Integer, Set<Integer>> favoritesMap = new HashMap<>();
     static List<Integer> studentsOrder = new ArrayList<>();
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
         classroom = new int[N][N];
 
         // 학생 순서와 각 학생의 좋아하는 학생 정보 입력 받기
         for (int i = 0; i < N * N; i++) {
-            int student = sc.nextInt();
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            int student = Integer.parseInt(st.nextToken());
             studentsOrder.add(student);
             Set<Integer> favorites = new HashSet<>();
             for (int j = 0; j < 4; j++) {
-                favorites.add(sc.nextInt());
+                favorites.add(Integer.parseInt(st.nextToken()));
             }
             favoritesMap.put(student, favorites);
         }
@@ -65,9 +71,9 @@ public class Main {
                 }
 
                 // 조건에 맞는 자리 선택
-                if (favoriteCount > maxFavoriteCount || 
-                    (favoriteCount == maxFavoriteCount && emptyCount > maxEmptyCount) || 
-                    (favoriteCount == maxFavoriteCount && emptyCount == maxEmptyCount && (x < chosenX || (x == chosenX && y < chosenY)))) {
+                if (favoriteCount > maxFavoriteCount ||
+                        (favoriteCount == maxFavoriteCount && emptyCount > maxEmptyCount) ||
+                        (favoriteCount == maxFavoriteCount && emptyCount == maxEmptyCount && (x < chosenX || (x == chosenX && y < chosenY)))) {
                     maxFavoriteCount = favoriteCount;
                     maxEmptyCount = emptyCount;
                     chosenX = x;
