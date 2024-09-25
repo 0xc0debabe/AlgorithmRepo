@@ -1,98 +1,95 @@
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int L, R, C; // 층, 행, 열
-    static char[][][] building; // 빌딩 정보
-    static boolean[][][] visited; // 방문 여부
-    static int[] dl = {-1, 1, 0, 0, 0, 0}; // 상, 하, 좌, 우, 앞, 뒤
-    static int[] dx = {0, 0, -1, 1, 0, 0}; 
-    static int[] dy = {0, 0, 0, 0, -1, 1}; 
-    static Queue<Node> queue; // BFS 탐색용 큐
+    static char[][][] board;
+    static int sl, sx, sy, l, r, c;
+    static int[] dl = {-1, 1, 0, 0, 0, 0};
+    static int[] dx = {0, 0, -1, 1, 0, 0};
+    static int[] dy = {0, 0, 0, 0, -1, 1};
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringBuilder sb = new StringBuilder();
 
         while (true) {
             StringTokenizer st = new StringTokenizer(br.readLine());
-            L = Integer.parseInt(st.nextToken());
-            R = Integer.parseInt(st.nextToken());
-            C = Integer.parseInt(st.nextToken());
+            l = Integer.parseInt(st.nextToken());
+            r = Integer.parseInt(st.nextToken());
+            c = Integer.parseInt(st.nextToken());
 
-            if (L == 0 && R == 0 && C == 0) break; // 입력 종료 조건
-
-            building = new char[L][R][C];
-            visited = new boolean[L][R][C];
-            queue = new LinkedList<>();
-            Node start = null;
-
-            for (int l = 0; l < L; l++) {
-                for (int r = 0; r < R; r++) {
-                    String line = br.readLine();
-                    for (int c = 0; c < C; c++) {
-                        building[l][r][c] = line.charAt(c);
-                        if (building[l][r][c] == 'S') {
-                            start = new Node(l, r, c, 0); // 시작점 기록
+            if (l == 0 && r == 0 && c == 0) break;
+            board = new char[l][r][c];
+            for (int i = 0; i < l; i++) {
+                for (int j = 0; j < r; j++) {
+                    String s = br.readLine();
+                    for (int k = 0; k < c; k++) {
+                        board[i][j][k] = s.charAt(k);
+                        if (board[i][j][k] == 'S') {
+                            sl = i;
+                            sx = j;
+                            sy = k;
                         }
                     }
                 }
-                br.readLine(); // 층과 층 사이의 빈 줄
+                br.readLine();
             }
 
-            int result = bfs(start); // BFS로 탈출 경로 탐색
-            if (result == -1) {
-                sb.append("Trapped!\n");
-            } else {
-                sb.append("Escaped in ").append(result).append(" minute(s).\n");
-            }
+            int bfs = bfs();
+            if (bfs == -1) sb.append("Trapped!").append('\n');
+            else sb.append("Escaped in ").append(bfs).append(" minute(s).").append('\n');
         }
 
         System.out.println(sb);
     }
 
-    // BFS 탐색 함수
-    static int bfs(Node start) {
-        queue.add(start);
-        visited[start.l][start.r][start.c] = true;
+    static int bfs() {
+        boolean[][][] isVisited = new boolean[l][r][c];
+        Queue<Node> queue = new LinkedList<>();
+        queue.add(new Node(sl, sx, sy, 0));
+        isVisited[sl][sx][sy] = true;
+        int answer = -1;
 
         while (!queue.isEmpty()) {
-            Node current = queue.poll();
+            Node now = queue.poll();
 
-            // 탈출구 도착 시
-            if (building[current.l][current.r][current.c] == 'E') {
-                return current.time;
+            if (board[now.height][now.row][now.col] == 'E') {
+                answer = now.footprint;
+                break;
             }
 
-            // 6방향 탐색 (상, 하, 좌, 우, 앞, 뒤)
             for (int i = 0; i < 6; i++) {
-                int nl = current.l + dl[i];
-                int nr = current.r + dx[i];
-                int nc = current.c + dy[i];
+                int nl = now.height + dl[i];
+                int nx = now.row + dx[i];
+                int ny = now.col + dy[i];
 
-                // 범위 밖이면 스킵
-                if (nl < 0 || nr < 0 || nc < 0 || nl >= L || nr >= R || nc >= C) continue;
+                if (nl < 0 || nx < 0 || ny < 0 || nl >= l || nx >= r || ny >= c) continue;
 
-                // 방문한 적 없고, 갈 수 있는 곳이면 이동
-                if (!visited[nl][nr][nc] && building[nl][nr][nc] != '#') {
-                    visited[nl][nr][nc] = true;
-                    queue.add(new Node(nl, nr, nc, current.time + 1));
+                if (!isVisited[nl][nx][ny] && board[nl][nx][ny] != '#') {
+                    isVisited[nl][nx][ny] = true;
+                    queue.add(new Node(nl, nx, ny, now.footprint + 1));
                 }
             }
         }
 
-        return -1; // 탈출구에 도착하지 못한 경우
+        return answer;
     }
+}
 
-    // 노드 클래스 (현재 위치와 시간 정보 포함)
-    static class Node {
-        int l, r, c, time;
+class Node {
+    int height;
+    int row;
+    int col;
+    int footprint;
 
-        public Node(int l, int r, int c, int time) {
-            this.l = l;
-            this.r = r;
-            this.c = c;
-            this.time = time;
-        }
+    public Node(int height, int row, int col, int footprint) {
+        this.height = height;
+        this.row = row;
+        this.col = col;
+        this.footprint = footprint;
     }
 }
