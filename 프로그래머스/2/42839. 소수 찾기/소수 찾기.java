@@ -48,11 +48,9 @@ class Solution {
                     set.add(target);
                 }
 
-                depth += 1;
-                dfs(charArr, concat, depth);
-                depth -= 1;
+                dfs(charArr, concat, depth + 1);
+                
                 isVisited[i] = false;
-
                 concat.deleteCharAt(concat.length() - 1);
             }
         }
