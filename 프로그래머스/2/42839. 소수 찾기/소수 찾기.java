@@ -1,54 +1,62 @@
-import java.util.HashSet;
-import java.util.Set;
-public class Solution {
-    static Set<Integer> set;
-    static boolean[] visited = new boolean[7]; // numbers는 길이 1 이상 7 이하인 문자열
- 
+
+import java.util.*;
+
+class Solution {
     public static void main(String[] args) {
-        System.out.println(solution("17"));
-        System.out.println(solution("011"));
+        Solution sol = new Solution();
+        String a = "17";
+        System.out.println(sol.solution(a));
     }
- 
-    public static int solution(String numbers) {
-        int answer = 0;
-        set = new HashSet<>();
-        dfs(numbers, "", 0);
- 
-        for (Integer num : set) {
-            if (isPrime(num)) {
-                answer++;
+
+    boolean[] isPrime = new boolean[10_000_000];
+    boolean[] isVisited;
+    Set<Integer> set = new HashSet<>();
+
+    public int solution(String numbers) {
+        Arrays.fill(isPrime, true);
+        isPrime[0] = false;
+        isPrime[1] = false;
+        for (int i = 2; i * i < 10_000_000; i++) {
+
+            if (isPrime[i]) {
+                for (int j = i * i; j < 10_000_000; j += i) {
+                    isPrime[j] = false;
+                }
             }
+
         }
-        return answer;
+
+        char[] charArray = numbers.toCharArray();
+        isVisited = new boolean[charArray.length];
+        dfs(charArray, new StringBuilder(), 0);
+
+        return set.size();
     }
- 
-    public static void dfs(String numbers, String s, int depth) {
-		// numbers 의 끝까지 다 탐색했다면 종료
-        if (depth > numbers.length()) {
+
+    private void dfs(char[] charArr, StringBuilder concat, int depth) {
+        if (depth == charArr.length) {
             return;
         }
- 
-        for (int i = 0; i < numbers.length(); i++) {
-            if(!visited[i]) {
-                visited[i] = true;
-                set.add(Integer.parseInt(s + numbers.charAt(i)));
-                dfs(numbers ,s + numbers.charAt(i), depth + 1);
-                visited[i] = false;
+
+        for (int i = 0; i < charArr.length; i++) {
+            if (!isVisited[i]) {
+                isVisited[i] = true;
+
+                concat.append(charArr[i]);
+                int target = Integer.parseInt(concat.toString());
+                if (isPrime[target]) {
+                    set.add(target);
+                }
+
+                depth += 1;
+                dfs(charArr, concat, depth);
+                depth -= 1;
+                isVisited[i] = false;
+
+                concat.deleteCharAt(concat.length() - 1);
             }
         }
+
     }
- 
-    public static boolean isPrime(int n) {
-        if (n < 2) {
-            return false;
-        }
-		// 에라토스테네스 체
-        for (int i = 2; i <= (int) Math.sqrt(n); i++) {
-            if (n % i == 0) {
-                return false;
-            }
-        }
- 
-        return true;
-    }
+
 }
