@@ -1,16 +1,16 @@
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 class Solution {
     public static void main(String[] args) {
         Solution sol = new Solution();
         int[] ar = {2, 3, 6};
-        String[] asd = {"A 12"};
-        String[] aa = {"2010.01.01 A", "2019.12.17 A"};
-        Arrays.stream(sol.solution("2020.12.17", asd, aa)).forEach(System.out::println);
+        String[] asd = {"A 13"};
+        String[] aa = {"2008.11.03 A"};
+        // 12 2
+        Arrays.stream(sol.solution("2009.12.28", asd, aa)).forEach(System.out::println);
     }
 
     public int[] solution(String today, String[] terms, String[] privacies) {
@@ -46,15 +46,13 @@ class Solution {
                 joinD -= 1;
             }
 
-//            joinM += validPeriodMon;
+            joinM += validPeriodMon;
 //            joinY += (joinM - 1) / 12;
 //            joinM = (joinM - 1) % 12 + 1;
 
-            if (joinM + validPeriodMon > 12) {
-                joinY += (joinM + validPeriodMon - 1) / 12;
-                joinM = (joinM + validPeriodMon - 1) % 12 + 1;
-            } else {
-                joinM += validPeriodMon;
+            if (joinM >= 13) {
+                joinY += (joinM - 1) / 12;
+                joinM = (joinM - 1) % 12 + 1;
             }
 
             LocalDate validPeriod = LocalDate.of(joinY, joinM, joinD);
