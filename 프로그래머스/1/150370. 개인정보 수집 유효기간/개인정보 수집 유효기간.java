@@ -1,4 +1,5 @@
 
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -45,16 +46,16 @@ class Solution {
                 joinD -= 1;
             }
 
-            joinM += validPeriodMon;
-            joinY += (joinM - 1) / 12;
-            joinM = (joinM - 1) % 12 + 1;
-            
-//            if (joinM + validPeriodMon > 12) {
-//                joinY += (joinM + validPeriodMon) / 12;
-//                joinM = (joinM + validPeriodMon) % 12;
-//            } else {
-//                joinM += validPeriodMon;
-//            }
+//            joinM += validPeriodMon;
+//            joinY += (joinM - 1) / 12;
+//            joinM = (joinM - 1) % 12 + 1;
+
+            if (joinM + validPeriodMon > 12) {
+                joinY += (joinM + validPeriodMon - 1) / 12;
+                joinM = (joinM + validPeriodMon - 1) % 12 + 1;
+            } else {
+                joinM += validPeriodMon;
+            }
 
             LocalDate validPeriod = LocalDate.of(joinY, joinM, joinD);
             if (now.isAfter(validPeriod)) {
