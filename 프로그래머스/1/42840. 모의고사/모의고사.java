@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 class Solution {
     public static void main(String[] args) {
@@ -25,12 +27,12 @@ class Solution {
             max = Math.max(max, correctNum[i]);
         }
 
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < correctNum.length; i++) {
-            if (correctNum[i] == max) list.add(i + 1);
-        }
-
-        return list.stream().mapToInt(Integer::intValue).toArray();
+        int finalMax = max;
+        return IntStream.range(0, 3)
+                .filter(i -> correctNum[i] == finalMax)
+                .map(i -> i + 1)
+                .sorted()
+                .toArray();
     }
 
     private int isCorrect(int idx, int[] answers, int[][] nums) {
