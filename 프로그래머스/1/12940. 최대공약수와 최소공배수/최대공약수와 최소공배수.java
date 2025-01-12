@@ -7,7 +7,7 @@ class Solution {
 
     public int[] solution(int n, int m) {
         int gcd = gcd(n, m);
-        int gcm = gcd * n / gcd * m / gcd;
+        int gcm = n * m / gcd;
         return new int[]{gcd, gcm};
     }
 
