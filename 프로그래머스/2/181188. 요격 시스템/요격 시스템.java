@@ -3,7 +3,7 @@ import java.util.PriorityQueue;
 class Solution {
     public static void main(String[] args) {
         Solution solution = new Solution();
-        int[][] targets = {{4, 5},{4, 8}, {10, 14}, {11, 13}, {5, 12}, {3, 7}};
+        int[][] targets = {{1, 2},{2, 3}};
         System.out.println(solution.solution(targets));
     }
 
@@ -17,7 +17,7 @@ class Solution {
         while (!pq.isEmpty()) {
             Target now = pq.poll();
             if (startLine <= now.s && now.s < endLine) {
-                startLine = Math.max(startLine, now.s);
+                startLine = now.s;
                 endLine = Math.min(endLine, now.e);
                 continue;
             }
@@ -25,7 +25,6 @@ class Solution {
             startLine = now.s;
             endLine = now.e;
             answer++;
-
         }
 
         return answer;
