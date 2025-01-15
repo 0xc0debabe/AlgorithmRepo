@@ -64,17 +64,4 @@ class Solution {
         return hour * 60 + minute;
     }
 
-    static class Task {
-        String name;
-        String start;
-        int playtime;
-
-        public Task(String name, String start, int playtime) {
-            this.name = name;
-            this.start = start;
-            this.playtime = playtime;
-        }
-    }
-
-
 }
