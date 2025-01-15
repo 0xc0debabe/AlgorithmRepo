@@ -16,7 +16,7 @@ class Solution {
         int answer = 0;
         while (!pq.isEmpty()) {
             Target now = pq.poll();
-            if (startLine <= now.s && now.s < endLine) {
+            if (now.s < endLine) {
                 startLine = now.s;
                 endLine = Math.min(endLine, now.e);
                 continue;
