@@ -12,19 +12,9 @@ class Solution {
         Arrays.fill(result, -1);
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < numbers.length; i++) {
-            int number = numbers[i];
-            boolean flag = false;
-
-            while (!flag && !stack.isEmpty()) {
-                int prevIdx = stack.peek();
-                int prevNumber = numbers[prevIdx];
-                if (prevNumber < number) {
-                    result[stack.pop()] = number;
-                } else {
-                    flag = true;
-                }
+            while (!stack.isEmpty() && numbers[stack.peek()] < numbers[i]) {
+                result[stack.pop()] = numbers[i];
             }
-
             stack.add(i);
         }
 
