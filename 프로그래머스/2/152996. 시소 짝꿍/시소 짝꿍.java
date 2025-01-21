@@ -20,8 +20,7 @@ class Solution {
             if(map.containsKey(b)) answer += map.get(b);
             if(map.containsKey(c)) answer += map.get(c);
             if(map.containsKey(d)) answer += map.get(d);
-            map.put((weight*1.0), map.getOrDefault((weight*1.0), 0)+1);
-//            map.put((double) (weight), map.getOrDefault(weight, 0) + 1);
+            map.put((double) (weight), map.getOrDefault((double)weight, 0) + 1);
         }
 
         return answer;
