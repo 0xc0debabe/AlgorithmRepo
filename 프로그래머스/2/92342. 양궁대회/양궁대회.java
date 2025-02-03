@@ -1,50 +1,62 @@
-class Solution {
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        int[] info = {2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0};
-//      ret = [0,2,2,0,1,0,0,0,0,0,0]
-        solution.solution(5, info);
-    }
-
-
-    static int[] res = { -1 };
-    static int max = -1000;
-    
-    public int[] solution(int n, int[] info) {
-        int[] lion = new int[11];
-        dfs(info, 1, n, lion);
-        return res;
-    }
-    
-    public void dfs(int[] info, int cnt, int n, int[] lion) {
-        if(cnt == n+1) {
-            int apeach_point = 0;
-            int lion_point = 0;
-            for(int i = 0; i <= 10; i++) {
-                if(info[i] != 0 || lion[i] != 0) {
-                    if(info[i] < lion[i]) lion_point += 10 - i;
-                    else apeach_point += 10 - i;
-                }
-            }
-            
-            if(lion_point > apeach_point) {
-                if(lion_point - apeach_point >= max)
-                {
-                    res = lion.clone();
-                    max = lion_point - apeach_point;
-                }
-            }
-            
-            return ;
+    class Solution {
+        public static void main(String[] args) {
+            Solution sol = new Solution();
+            int n = 3;
+            int[] arr = {1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0};
+            sol.solution(n, arr);
         }
-        
-        for(int j = 0; j <= 10 && lion[j] <= info[j]; j++) {
-            lion[j]++;
-            dfs(info, cnt + 1, n, lion);
-            lion[j]--;
-        }
-        
-    }
-    
 
-}
+        int[] answer = new int[11];
+        int max_score = 0;
+        public int[] solution(int n, int[] info) {
+            int[] lion = new int[info.length];
+            backTracking(n, info, lion, 0, 0);
+            if (max_score == 0) return new int[]{-1};
+
+            return answer;
+        }
+
+    //    0, 0, 1, 2, 0, 1, 1, 1, 1, 1, 1 ->
+    //    1, 1, 2, 0, 1, 2, 2, 0, 0, 0, 0 -> answer 10 9 8 6 5 4 42
+    //    1, 1, 1, 1, 1, 1, 1, 2, 0, 0, 0 ->
+        private void backTracking(int n, int[] peach, int[] lion, int depth, int idx) {
+            if (depth == n) {
+                int peachScore = 0;
+                int lionScore = 0;
+
+                for (int i = 0; i <= 10; i++) {
+                    if (peach[i] > 0 || lion[i] > 0) {
+                        if (peach[i] >= lion[i]) {
+                            peachScore += 10 - i;
+                        } else {
+                            lionScore += 10 - i;
+                        }
+                    }
+                }
+
+                if(lionScore - peachScore > max_score){
+                    max_score = lionScore - peachScore;
+                    answer = lion.clone();
+                } else if( lionScore - peachScore == max_score){
+                    for(int i = 10; i >= 0 ; i--){
+                        if(answer[i] < lion[i]){
+                            answer = lion.clone();
+                            break;
+                        }
+
+                        if(answer[i] > lion[i] )break;
+                    }
+                }
+
+                return;
+            }
+
+            for (int i = idx; i < 11; i++) {
+                if (peach[i] < lion[i]) continue;
+                lion[i]++;
+                backTracking(n, peach, lion, depth + 1, i);
+                lion[i]--;
+            }
+        }
+
+    }
