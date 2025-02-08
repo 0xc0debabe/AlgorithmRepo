@@ -1,66 +1,87 @@
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 class Solution {
-    static int[] dr = {-1, 1, 0, 0}; // 상, 하, 좌, 우
-    static int[] dc = {0, 0, -1, 1};
+
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        String[][] a = {
+                {
+                        "PXPXP",
+                        "OXOXO",
+                        "PXOXP",
+                        "OXOXO",
+                        "PXPXP"
+                }
+        };
+        sol.solution(a);
+    }
+
+    char[][] board;
+    boolean[][] isVisited;
+    int[] dx = {-1, 1, 0, 0};
+    int[] dy = {0, 0, -1, 1};
 
     public int[] solution(String[][] places) {
-        int[] answer = new int[5];
+        int[] answer = new int[places.length];
 
-        for (int i = 0; i < 5; i++) {
-            answer[i] = checkRoom(places[i]) ? 1 : 0;
+        for (int k = 0; k < places.length; k++) {
+            String[] place = places[k];
+
+            int n = place.length;
+            int m = place[0].length();
+
+            board = new char[n][m];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    board[i][j] = place[i].charAt(j);
+                }
+            }
+
+            boolean socialDist = true;
+            for (int i = 0; i < n && socialDist; i++) {
+                for (int j = 0; j < m && socialDist; j++) {
+                    if (board[i][j] == 'P') {
+                        isVisited = new boolean[n][m];
+                        if (!isDistanceMaintain(i, j, n, m)) socialDist = false;
+                    }
+                }
+            }
+
+            if (socialDist) answer[k] = 1;
         }
 
         return answer;
     }
 
-    private boolean checkRoom(String[] room) {
-        List<int[]> people = new ArrayList<>();
-
-        // 1. 모든 P(응시자) 위치 찾기
-        for (int r = 0; r < 5; r++) {
-            for (int c = 0; c < 5; c++) {
-                if (room[r].charAt(c) == 'P') {
-                    people.add(new int[]{r, c});
-                }
-            }
-        }
-
-        // 2. 각 P마다 BFS 탐색
-        for (int[] start : people) {
-            if (!bfs(start[0], start[1], room)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean bfs(int sr, int sc, String[] room) {
+    private boolean isDistanceMaintain(int row, int col, int n, int m) {
         Queue<int[]> queue = new LinkedList<>();
-        boolean[][] visited = new boolean[5][5];
-
-        queue.add(new int[]{sr, sc, 0}); // {행, 열, 이동거리}
-        visited[sr][sc] = true;
+        queue.add(new int[]{row, col, 0});
+        isVisited[row][col] = true;
 
         while (!queue.isEmpty()) {
-            int[] cur = queue.poll();
-            int r = cur[0], c = cur[1], dist = cur[2];
+            int[] now = queue.poll();
+            int r = now[0];
+            int c = now[1];
+            int dist = now[2];
 
-            if (dist >= 2) continue; // 거리 2 초과하면 검사 불필요
+            if (dist >= 2) continue;
 
-            for (int d = 0; d < 4; d++) {
-                int nr = r + dr[d], nc = c + dc[d];
+            for (int i = 0; i < 4; i++) {
+                int nx = r + dx[i];
+                int ny = c + dy[i];
 
-                if (nr < 0 || nr >= 5 || nc < 0 || nc >= 5 || visited[nr][nc]) continue;
-
-                visited[nr][nc] = true;
-
-                if (room[nr].charAt(nc) == 'P') return false; // 거리 2 이내에 P가 있으면 실패
-                if (room[nr].charAt(nc) == 'O') queue.add(new int[]{nr, nc, dist + 1}); // 빈 테이블이면 계속 탐색
+                if (nx >= 0 && ny >= 0 && nx < 5 && ny < 5 && !isVisited[nx][ny]) {
+                    isVisited[nx][ny] = true;
+                    if (board[nx][ny] == 'O') queue.add(new int[]{nx, ny, dist + 1});
+                    if (board[nx][ny] == 'P') return false;
+                }
             }
+
         }
 
         return true;
     }
+
+
 }
