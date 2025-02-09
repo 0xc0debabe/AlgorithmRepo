@@ -52,17 +52,18 @@ class Solution {
     }
 
     private static int binarySearch(List<Integer> list, int score) {
-        int start = 0, end = list.size() - 1;
+        int start = 0, end = list.size();
 
-        while (start <= end) {
+        while (start < end) {  // end를 list.size()로 설정
             int mid = (start + end) / 2;
-            if (list.get(mid) < score)
+            if (score <= list.get(mid)) {
+                end = mid;  // score보다 큰 값이 나오는 위치로 좁힌다.
+            } else {
                 start = mid + 1;
-            else
-                end = mid - 1;
+            }
         }
 
-        return list.size() - start;
+        return list.size() - start;  // score 이상이 처음 나오는 인덱스를 반환
     }
 
     private void dfs(String str, String[] split, int depth) {
