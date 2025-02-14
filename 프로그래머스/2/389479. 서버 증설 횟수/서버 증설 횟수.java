@@ -10,20 +10,18 @@ class Solution {
     }
 
     public int solution(int[] players, int m, int k) {
-        int playerCapacity = m - 1;
+        int playerCapacity = 0;
 
         int answer = 0;
         PriorityQueue<Server> pq = new PriorityQueue<>();
 
         for (int i = 0; i < players.length; i++) {
-
             int player = players[i];
-            playerCapacity = (pq.size() + 1) * m - 1;
+            playerCapacity = (pq.size() + 1) * m;
 
-            if (playerCapacity < player) {
+            if (playerCapacity <= player) {
                 int diff = player - playerCapacity;
-                int tmp = diff % m == 0 ? 1 : 0;
-                int serverQuantity = diff / m + 1 - tmp;
+                int serverQuantity = diff / m + 1;
                 answer += serverQuantity;
                 for (int j = 0; j < serverQuantity; j++) {
                     pq.add(new Server(i + k, 1));
@@ -40,7 +38,7 @@ class Solution {
         if (pq.isEmpty()) return;
 
         while (!pq.isEmpty() && pq.peek().endTime - 1 <= nowTime) pq.poll();
-        
+
     }
 
     static class Server implements Comparable<Server> {
