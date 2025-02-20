@@ -1,25 +1,28 @@
-
 import java.util.Arrays;
 
 class Solution {
-    public static void main(String[] args){
-        Solution s = new Solution();
-        int[] citations = {5, 4, 7, 1, 2};
-        s.solution(citations);
-    }
-
     public int solution(int[] citations) {
-        Arrays.sort(citations);
-        int len = citations.length;
+        Arrays.sort(citations); // 오름차순 정렬
+        int left = 0, right = citations.length;
         int answer = 0;
-        for(int i = 0; i < len; i++) {
-            if(citations[i] <= len - i && citations[i] >= i + 1){
-                answer = citations[i];
-                answer = Math.max(answer, citations[i]);
+        
+        while (left <= right) {
+            int mid = (left + right) / 2; // h 값 후보
+            int count = 0;
+
+            // mid번 이상 인용된 논문의 개수 찾기
+            for (int citation : citations) {
+                if (citation >= mid) count++;
+            }
+
+            // mid 이상의 논문이 mid편 이상이면 h 가능
+            if (count >= mid) {
+                answer = mid;
+                left = mid + 1; // h를 더 키워볼 수 있음
+            } else {
+                right = mid - 1; // h를 줄여야 함
             }
         }
-
-        System.out.println(answer);
         return answer;
     }
 }
