@@ -1,47 +1,42 @@
-
-import java.util.*;
-
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 class Solution {
-    public static void main(String[] args) {
-        int n = 2;
-        int a = 10;
-        int[] ar = {7, 4, 5, 6};
-        Solution s = new Solution();
-        s.solution(n, a, ar);
 
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] arr = {7, 4, 5, 6};
+        solution.solution(2, 10, arr);
     }
 
-
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        Queue<Integer> trucksQ = new LinkedList<>();
-        for (int tw : truck_weights) {
-            trucksQ.add(tw);
-        }
-
-        int currTotalWeight = 0;
+        Queue<Integer> queue = new LinkedList<>();
         int time = 0;
-        Queue<Integer> bridge = new LinkedList<>();
-        while (!trucksQ.isEmpty()) {
+        int totalWeight = 0;
+        for (int i = 0; i < truck_weights.length; i++) {
+            int truckWeight = truck_weights[i];
+
+            if (queue.size() == bridge_length) {
+                int poll = queue.poll();
+                totalWeight -= poll;
+            }
+
+            if (totalWeight + truckWeight <= weight) {
+                queue.add(truckWeight);
+                totalWeight += truckWeight;
+            } else {
+                i--;
+                queue.add(0);
+            }
+
             time++;
-            if (bridge.size() == bridge_length) {
-                currTotalWeight -= bridge.poll();
-            }
-
-            if (!trucksQ.isEmpty()) {
-                if (currTotalWeight + trucksQ.peek() <= weight) {
-                    int currTruckWeight = trucksQ.poll();
-                    bridge.add(currTruckWeight);
-                    currTotalWeight += currTruckWeight;
-                } else {
-                    bridge.add(0);
-                }
-            }
-
-
         }
 
-        return time + bridge_length;
+        time += bridge_length;
+
+        return time;
     }
 
 }
+
