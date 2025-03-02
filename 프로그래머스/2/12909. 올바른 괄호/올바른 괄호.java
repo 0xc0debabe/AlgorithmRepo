@@ -1,29 +1,36 @@
-import java.util.*;
 
+import java.util.Stack;
 
 class Solution {
+
     public static void main(String[] args) {
-        int n = 10;
-        int[] a = {7};
+        Solution solution = new Solution();
+        String s = "(()(";
+        solution.solution(s);
     }
 
-
     boolean solution(String s) {
+        boolean answer = true;
+
         Stack<Character> stack = new Stack<>();
-
         for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '(') {
-                stack.add('(');
-            } else {
-                if (stack.isEmpty()) {
-                    return false;
-                }
+            char c = s.charAt(i);
 
-                stack.pop();
-            } 
+            if (c == ')') {
+                if (!stack.isEmpty()) {
+                    stack.pop();
+                    continue;
+                } else {
+                    answer = false;
+                    break;
+                }
+            }
+
+            stack.add(c);
         }
 
-        return stack.isEmpty();
+        if (!stack.isEmpty()) answer = false;
+        return answer;
     }
 
 }
