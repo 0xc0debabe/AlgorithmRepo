@@ -1,51 +1,41 @@
+import java.util.*;
+
 class Solution {
-
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        String[] arr = {"hot", "dot", "dog", "lot", "log", "cog"};
-        solution.solution("hit", "cog", arr);
-    }
-
-    boolean[] isVisited;
-    int answer = Integer.MAX_VALUE;
     public int solution(String begin, String target, String[] words) {
-        isVisited = new boolean[words.length];
-        dfs(words, begin, target, 0);
-        if (answer == Integer.MAX_VALUE) answer = 0;
-        return answer;
-    }
+        // target이 words에 없으면 변환 불가능
+        if (!Arrays.asList(words).contains(target)) return 0;
 
-    private void dfs(String[] words, String prevWord, String target, int depth) {
-        if (target.equals(prevWord)) {
-            answer = Math.min(answer, depth);
-            return;
-        }
+        Queue<String> queue = new LinkedList<>();
+        Map<String, Integer> depth = new HashMap<>();
 
-        for (int i = 0; i < words.length; i++) {
-            if (!isVisited[i] && isSimilar(words[i], prevWord)) {
-                isVisited[i] = true;
-                dfs(words, words[i], target, depth + 1);
-                isVisited[i] = false;
-            }
-        }
-    }
+        queue.add(begin);
+        depth.put(begin, 0);
 
+        while (!queue.isEmpty()) {
+            String current = queue.poll();
+            int currentDepth = depth.get(current);
 
-    private boolean isSimilar(String word, String prevWord) {
-        if (prevWord.isEmpty()) return true;
-
-        boolean flag = false;
-        for (int i = 0; i < word.length(); i++) {
-            char c1 = word.charAt(i);
-            char c2 = prevWord.charAt(i);
-
-            if (c1 != c2) {
-                if (!flag) flag = true;
-                else return false;
+            for (String word : words) {
+                if (!depth.containsKey(word) && isOneLetterDiff(current, word)) {
+                    depth.put(word, currentDepth + 1);
+                    queue.add(word);
+                    
+                    // target을 찾으면 변환 횟수 반환
+                    if (word.equals(target)) return currentDepth + 1;
+                }
             }
         }
 
-        return true;
+        return 0;  // 변환할 수 없는 경우
     }
 
+    // 단어 두 개가 한 글자만 다른지 확인
+    private boolean isOneLetterDiff(String a, String b) {
+        int diff = 0;
+        for (int i = 0; i < a.length(); i++) {
+            if (a.charAt(i) != b.charAt(i)) diff++;
+            if (diff > 1) return false;  // 2개 이상 다르면 false
+        }
+        return diff == 1;  // 정확히 1개만 다를 때 true
+    }
 }
