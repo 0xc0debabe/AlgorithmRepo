@@ -1,53 +1,51 @@
-
-import java.util.*;
 class Solution {
+
     public static void main(String[] args) {
-        Solution sol = new Solution();
-        String h = "hit";
-        String c = "cog";
-        String[] ar = {"hot", "dot", "dog", "lot", "log", "cog"};
-        sol.solution(h, c, ar);
+        Solution solution = new Solution();
+        String[] arr = {"hot", "dot", "dog", "lot", "log", "cog"};
+        solution.solution("hit", "cog", arr);
     }
 
     boolean[] isVisited;
-    int answer = 0;
+    int answer = Integer.MAX_VALUE;
     public int solution(String begin, String target, String[] words) {
         isVisited = new boolean[words.length];
-        dfs(begin, target, words, 0);
+        dfs(words, begin, target, 0);
+        if (answer == Integer.MAX_VALUE) answer = 0;
         return answer;
     }
 
-    void dfs(String begin, String target, String[] words, int cnt) {
-        if (begin.equals(target)) {
-            answer = cnt;
+    private void dfs(String[] words, String prevWord, String target, int depth) {
+        if (target.equals(prevWord)) {
+            answer = Math.min(answer, depth);
             return;
         }
 
         for (int i = 0; i < words.length; i++) {
-            if (isVisited[i]) continue;
-            
-            if (isSimilarWord(begin, words[i])) {
+            if (!isVisited[i] && isSimilar(words[i], prevWord)) {
                 isVisited[i] = true;
-                dfs(words[i], target, words, cnt + 1);
+                dfs(words, words[i], target, depth + 1);
                 isVisited[i] = false;
             }
         }
-
     }
 
-    boolean isSimilarWord(String standard, String target) {
-        int cnt = 0;
-        for (int i = 0; i < standard.length(); i++) {
-            if (standard.charAt(i) != target.charAt(i)) {
-                cnt++;
-            }
 
-            if (cnt >= 2) {
-                return false;
+    private boolean isSimilar(String word, String prevWord) {
+        if (prevWord.isEmpty()) return true;
+
+        boolean flag = false;
+        for (int i = 0; i < word.length(); i++) {
+            char c1 = word.charAt(i);
+            char c2 = prevWord.charAt(i);
+
+            if (c1 != c2) {
+                if (!flag) flag = true;
+                else return false;
             }
         }
 
-        return cnt == 1;
+        return true;
     }
 
 }
