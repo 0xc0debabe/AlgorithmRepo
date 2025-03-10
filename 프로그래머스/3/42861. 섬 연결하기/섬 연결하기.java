@@ -1,3 +1,4 @@
+import javax.swing.text.html.ListView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -33,13 +34,13 @@ class Solution {
         PriorityQueue<int[]> pq = new PriorityQueue<>((x, y) -> x[1] - y[1]);
         pq.add(new int[]{startVertex, 0});
         boolean[] isVisited = new boolean[n + 1];
+        isVisited[startVertex] = true;
         int answer = 0;
         while (!pq.isEmpty()) {
             int[] now = pq.poll();
-            if (isVisited[now[0]]) continue;
-            isVisited[now[0]] = true;
             answer += now[1];
-            
+            isVisited[now[0]] = true;
+
             for (int[] next : list.get(now[0])) {
                 if (!isVisited[next[0]]) {
                     pq.add(new int[]{next[0], next[1]});
