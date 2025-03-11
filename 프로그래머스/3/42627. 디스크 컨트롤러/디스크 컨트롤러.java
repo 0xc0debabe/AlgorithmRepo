@@ -1,87 +1,74 @@
-
+import java.util.Arrays;
 import java.util.PriorityQueue;
 
 class Solution {
-    public static void main(String[] args){
-        Solution s = new Solution();
-        int[][] a = {
-                {0, 3}, {1, 9}, {3, 5}
-        };
-        System.out.println(s.solution(a));
+
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[][] jobs = {{0, 3}, {1, 9}, {2, 6}};
+        System.out.println(solution.solution(jobs));
     }
 
+
     public int solution(int[][] jobs) {
-        PriorityQueue<Node2> pq2 = new PriorityQueue<>();
+        PriorityQueue<Task> pq = new PriorityQueue<>();
+        int len = jobs.length;
 
-        for (int i = 0; i < jobs.length; i++) {
-            int start = jobs[i][0];
-            int duration = jobs[i][1];
-            pq2.add(new Node2(i, duration, start));
-        }
+        Arrays.sort(jobs, (x, y) -> x[0] - y[0]);
 
+        int[] endTime = new int[len];
         int currTime = 0;
-        int answer = 0;
-        PriorityQueue<Node> pq = new PriorityQueue<>();
-        while (!pq.isEmpty() || !pq2.isEmpty()) {
-
-            while (!pq2.isEmpty() && pq2.peek().start <= currTime) {
-                Node2 poll = pq2.poll();
-                pq.add(new Node(poll.jobNum, poll.duration, poll.start));
+        int idx1 = 0;
+        int idx2 = 0;
+        while (idx1 < len) {
+            while (idx1 < len && jobs[idx1][0] <= currTime) {
+                pq.add(new Task(idx1, jobs[idx1][0], jobs[idx1][1]));
+                idx1++;
             }
 
             if (!pq.isEmpty()) {
-                Node now = pq.poll();
-                answer += now.duration + currTime - now.start;
-                currTime += now.duration;
+                Task task = pq.poll();
+                endTime[idx2++] = task.runTime + currTime - task.requestTime;
+                currTime += task.runTime;
             } else {
-                currTime++;
-            } 
-        }
-
-        return answer / jobs.length;
-    }
-
-    static class Node2 implements Comparable<Node2> {
-        int jobNum;
-        int duration;
-        int start;
-
-        public Node2(int jobNum, int duration, int start) {
-            this.jobNum = jobNum;
-            this.duration = duration;
-            this.start = start;
-        }
-
-        @Override
-        public int compareTo(Node2 o) {
-            return this.start - o.start;
-        }
-
-    }
-
-    static class Node implements Comparable<Node>{
-        int jobNum;
-        int duration;
-        int start;
-
-        public Node(int jobNum, int duration, int start) {
-            this.jobNum = jobNum;
-            this.duration = duration;
-            this.start = start;
-        }
-
-        @Override
-        public int compareTo(Node o) {
-            if (this.duration == o.duration) {
-
-                if (this.start == o.start) {
-                    return this.jobNum - o.jobNum;
-                }
-
-                return this.start - o.start;
+                currTime = jobs[idx1][0];
             }
 
-            return this.duration - o.duration;
+        }
+
+        while (!pq.isEmpty()) {
+            Task task = pq.poll();
+            endTime[idx2++] = task.runTime + currTime - task.requestTime;
+            currTime += task.runTime;
+        }
+
+
+        return Arrays.stream(endTime).sum() / len;
+    }
+
+    static class Task implements Comparable<Task>{
+        int idx;
+        int requestTime;
+        int runTime;
+
+        public Task(int idx, int requestTime, int runTime) {
+            this.idx = idx;
+            this.requestTime = requestTime;
+            this.runTime = runTime;
+        }
+
+        public int compareTo(Task task) {
+            if (this.runTime == task.runTime) {
+
+                if (this.requestTime == task.requestTime) {
+                    return this.idx - task.idx;
+                }
+
+                return this.requestTime - task.requestTime;
+            }
+
+            return this.runTime - task.runTime;
         }
     }
+
 }
