@@ -16,37 +16,48 @@ class Solution {
         }
     }
 
-    Map<String, String> link = new HashMap<>();
-    Map<String, Integer> money = new HashMap<>();
+    List<List<String>> list = new ArrayList<>();
+    Map<String, Integer> converter = new HashMap<>();
+    int[] result;
     public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
+        for (int i = 0; i <= enroll.length; i++) {
+            list.add(new ArrayList<>());
+        }
+
+        converter.put("center", 0);
+        for (int i = 1; i <= enroll.length; i++) {
+            converter.put(enroll[i - 1], i);
+        }
+
         for (int i = 0; i < enroll.length; i++) {
             String enr = enroll[i];
             String ref = referral[i];
-            link.put(enr, ref);
-        }
 
-        for (int i = 0; i < seller.length; i++) {
-            dfs(seller[i], amount[i] * 100);
-        }
-
-        int[] answer = new int[enroll.length];
-        for (int i = 0; i < enroll.length; i++) {
-            if (money.containsKey(enroll[i])) {
-                answer[i] = money.get(enroll[i]);
+            if (ref.equals("-")) {
+                list.get(converter.get(enr)).add("center");
+                continue;
             }
+
+            list.get(converter.get(enr)).add(ref);
         }
 
-        return answer;
+        result = new int[enroll.length + 1];
+        for (int i = 0; i < seller.length; i++) {
+            String s = seller[i];
+            dfs(s, amount[i] * 100);
+        }
+
+        return Arrays.copyOfRange(result, 1, result.length);
     }
 
-
     private void dfs(String name, int salePrice) {
-        if (salePrice <= 0 || name == null) return;
-        int nextBenefit = salePrice / 10;
-        money.put(name, money.getOrDefault(name, 0) + salePrice - nextBenefit);
+        if (salePrice < 1) return;
+        int myBenefit = (int) Math.ceil(salePrice * 0.9);
+        int rest = (int) (salePrice * 0.1);
+        result[converter.get(name)] += myBenefit;
 
-        if (nextBenefit > 0 && link.containsKey(name)) {
-            dfs(link.get(name), nextBenefit);
+        for (String next : list.get(converter.get(name))) {
+            dfs(next, rest);
         }
     }
 
