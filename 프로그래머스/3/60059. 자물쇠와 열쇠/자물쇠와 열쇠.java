@@ -30,8 +30,8 @@ class Solution {
                     subtractKey(board, key, i, j, m);
                 }
             }
-
-            key = rotate(key);
+            
+            if(d != 3) key = rotate(key);
         }
 
         return answer;
