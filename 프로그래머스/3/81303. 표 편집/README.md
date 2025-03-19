@@ -1,10 +1,10 @@
 # [level 3] 표 편집 - 81303 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/81303) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/81303#qna) 
 
 ### 성능 요약
 
-메모리: 105 MB, 시간: 785.40 ms
+메모리: 118 MB, 시간: 245.27 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 03월 17일 22:25:59
+2025년 03월 19일 15:34:38
 
 ### 문제 설명
 
