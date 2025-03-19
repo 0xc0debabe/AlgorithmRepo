@@ -1,6 +1,4 @@
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 class Solution {
     public static void main(String[] args) {
@@ -23,7 +21,7 @@ class Solution {
         Node root = nodes[0];
 
         for (int i = 1; i < len; i++) {
-            insertNode(root, nodes[i]);
+            insert(root, nodes[i]);
         }
         answer = new int[2][len];
         idx = 0;
@@ -32,6 +30,25 @@ class Solution {
         postOrder(root);
 
         return answer;
+    }
+
+    private void insert(Node root, Node child) {
+        root = insertRec(root, child);
+    }
+
+    private Node insertRec(Node root, Node child) {
+        if (root == null) {
+            root = new Node(child.x, child.y, child.idx, null, null);
+            return root;
+        }
+
+        if (root.x > child.x) {
+            root.left = insertRec(root.left, child);
+        } else {
+            root.right = insertRec(root.right, child);
+        }
+
+        return root;
     }
 
     private void preOrder(Node now) {
@@ -49,24 +66,6 @@ class Solution {
         postOrder(now.right);
         answer[1][idx++] = now.idx;
     }
-
-    private void insertNode(Node parent, Node child) {
-        if (parent.x > child.x) {
-            if (parent.left == null) {
-                parent.left = child;
-            } else {
-                insertNode(parent.left, child);
-            }
-        } else {
-            if (parent.right == null) {
-                parent.right = child;
-            } else {
-                insertNode(parent.right, child);
-            }
-        }
-    }
-
-
 
     static class Node implements Comparable<Node>{
         int x;
