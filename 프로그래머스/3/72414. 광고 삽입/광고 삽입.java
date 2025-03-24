@@ -1,45 +1,51 @@
+
 class Solution {
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        String play = "00:00:10";
+        String adv = "00:00:04";
+        String[] logs = {"00:00:00-00:00:05", "00:00:03-00:00:08"};
+        System.out.println(solution.solution(play, adv, logs));
+    }
+
     public String solution(String play_time, String adv_time, String[] logs) {
         int totalRuntime = convertToSec(play_time);
         int adRuntime = convertToSec(adv_time);
-        long[] totalSec = new long[totalRuntime + 1]; // 각 초마다의 재생 시청자 수를 기록
-        
-        // 로그를 바탕으로 차분 배열로 누적 재생시간 계산
+        long[] totalSec = new long[totalRuntime + 3];
+
         for (String log : logs) {
             String[] split = log.split("-");
-            int startSec = convertToSec(split[0]);
-            int endSec = convertToSec(split[1]);
+            String start = split[0];
+            String end = split[1];
 
-            totalSec[startSec] += 1;
-            totalSec[endSec] -= 1;
+            int startSec = convertToSec(start);
+            int endSec = convertToSec(end);
+
+            totalSec[startSec + 1] += 1;
+            totalSec[endSec + 1] -= 1;
         }
 
-        // 차분 배열을 이용하여 실제 누적 시청시간을 계산
-        for (int i = 1; i <= totalRuntime; i++) {
-            totalSec[i] += totalSec[i - 1];
+        for (int i = 1; i < totalSec.length - 1; i++) {
+            totalSec[i] = totalSec[i - 1] + totalSec[i];
         }
 
-        // 광고가 삽입될 구간을 찾기 위해 구간 별 합을 구함
-        long maxTime = 0;
-        int maxStart = 0;
-
-        long currentSum = 0;
-        // 처음부터 광고 재생 시간만큼 구간을 누적
-        for (int i = 0; i < adRuntime; i++) {
-            currentSum += totalSec[i];
+        for (int i = 1; i < totalSec.length - 1; i++) {
+            totalSec[i] = totalSec[i - 1] + totalSec[i];
         }
-        maxTime = currentSum;
 
-        // 슬라이딩 윈도우 방식으로 광고 구간을 이동시키며 최적의 위치 찾기
-        for (int i = adRuntime; i <= totalRuntime; i++) {
-            currentSum += totalSec[i] - totalSec[i - adRuntime];
-            if (currentSum > maxTime) {
-                maxTime = currentSum;
-                maxStart = i - adRuntime + 1; // 광고 구간의 시작 시간
+        long max = -1;
+        int tmp = 0;
+        int right = adRuntime;
+        for (int i = 1; i <= totalRuntime - adRuntime + 1; i++) {
+            if (totalSec[right] - totalSec[i - 1] > max) {
+                max = totalSec[right] - totalSec[i - 1];
+                tmp = i - 1;
             }
+
+            right++;
         }
 
-        return convertToStr(maxStart);
+        return convertToStr(tmp);
     }
 
     private int convertToSec(String time) {
@@ -51,6 +57,8 @@ class Solution {
         String hour = String.format("%02d", idx / 3600);
         String minute = String.format("%02d", (idx % 3600) / 60);
         String sec = String.format("%02d", (idx % 3600) % 60);
+
         return hour + ":" + minute + ":" + sec;
     }
+
 }
