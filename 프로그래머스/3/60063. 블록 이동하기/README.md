@@ -1,6 +1,6 @@
 # [level 3] 블록 이동하기 - 60063 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/60063) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/60063#qna) 
 
 ### 성능 요약
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2025년 04월 16일 17:14:45
+2025년 04월 16일 17:15:22
 
 ### 문제 설명
 

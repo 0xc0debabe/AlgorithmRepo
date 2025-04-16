@@ -3,66 +3,65 @@ import java.util.*;
 class Solution {
     public int solution(int[][] board) {
         int n = board.length;
+
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        boolean[][][] visited = new boolean[2][n][n]; // [dir][row][col]
         Queue<Robot> q = new LinkedList<>();
-        Set<String> visited = new HashSet<>();
 
-        Robot start = new Robot(0, 0, 0, 1, 0);
-        q.add(start);
-        visited.add(start.getKey());
-
-        int[][] dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        // 초기 상태: (0,0)-(0,1), dir=1(가로)
+        q.add(new Robot(0, 0, 0, 1, 1, 0));
+        visited[1][0][0] = true;
+        visited[1][0][1] = true;
 
         while (!q.isEmpty()) {
             Robot now = q.poll();
-            int r1 = now.r1, c1 = now.c1;
-            int r2 = now.r2, c2 = now.c2;
 
-            if ((r1 == n - 1 && c1 == n - 1) || (r2 == n - 1 && c2 == n - 1)) {
-                return now.time;
+            int row1 = now.row1, col1 = now.col1;
+            int row2 = now.row2, col2 = now.col2;
+            int dir = now.dir;
+
+            if ((row1 == n - 1 && col1 == n - 1) || (row2 == n - 1 && col2 == n - 1)) {
+                return now.cnt;
             }
 
             // 이동
-            for (int[] d : dirs) {
-                int nr1 = r1 + d[0], nc1 = c1 + d[1];
-                int nr2 = r2 + d[0], nc2 = c2 + d[1];
+            for (int d = 0; d < 4; d++) {
+                int nr1 = row1 + dr[d];
+                int nc1 = col1 + dc[d];
+                int nr2 = row2 + dr[d];
+                int nc2 = col2 + dc[d];
 
-                if (isValid(nr1, nc1, board) && isValid(nr2, nc2, board)) {
-                    Robot next = new Robot(nr1, nc1, nr2, nc2, now.time + 1);
-                    if (!visited.contains(next.getKey())) {
-                        visited.add(next.getKey());
-                        q.add(next);
+                if (isValid(nr1, nc1, n, board) && isValid(nr2, nc2, n, board)) {
+                    if (!visited[dir][nr1][nc1] || !visited[dir][nr2][nc2]) {
+                        visited[dir][nr1][nc1] = true;
+                        visited[dir][nr2][nc2] = true;
+                        q.add(new Robot(nr1, nc1, nr2, nc2, dir, now.cnt + 1));
                     }
                 }
             }
 
             // 회전
-            if (r1 == r2) { // 가로
-                for (int d : new int[]{-1, 1}) {
-                    if (isValid(r1 + d, c1, board) && isValid(r2 + d, c2, board)) {
-                        Robot r1pivot = new Robot(r1, c1, r1 + d, c1, now.time + 1);
-                        Robot r2pivot = new Robot(r2, c2, r2 + d, c2, now.time + 1);
-                        if (!visited.contains(r1pivot.getKey())) {
-                            visited.add(r1pivot.getKey());
-                            q.add(r1pivot);
-                        }
-                        if (!visited.contains(r2pivot.getKey())) {
-                            visited.add(r2pivot.getKey());
-                            q.add(r2pivot);
+            if (dir == 1) { // 가로 → 세로 회전
+                for (int d = -1; d <= 1; d += 2) {
+                    if (isValid(row1 + d, col1, n, board) && isValid(row2 + d, col2, n, board)) {
+                        if (!visited[0][row1][col1] || !visited[0][row2][col2]) {
+                            visited[0][row1][col1] = true;
+                            visited[0][row2][col2] = true;
+                            q.add(new Robot(row1, col1, row1 + d, col1, 0, now.cnt + 1));
+                            q.add(new Robot(row2, col2, row2 + d, col2, 0, now.cnt + 1));
                         }
                     }
                 }
-            } else { // 세로
-                for (int d : new int[]{-1, 1}) {
-                    if (isValid(r1, c1 + d, board) && isValid(r2, c2 + d, board)) {
-                        Robot c1pivot = new Robot(r1, c1, r1, c1 + d, now.time + 1);
-                        Robot c2pivot = new Robot(r2, c2, r2, c2 + d, now.time + 1);
-                        if (!visited.contains(c1pivot.getKey())) {
-                            visited.add(c1pivot.getKey());
-                            q.add(c1pivot);
-                        }
-                        if (!visited.contains(c2pivot.getKey())) {
-                            visited.add(c2pivot.getKey());
-                            q.add(c2pivot);
+            } else { // 세로 → 가로 회전
+                for (int d = -1; d <= 1; d += 2) {
+                    if (isValid(row1, col1 + d, n, board) && isValid(row2, col2 + d, n, board)) {
+                        if (!visited[1][row1][col1] || !visited[1][row2][col2]) {
+                            visited[1][row1][col1] = true;
+                            visited[1][row2][col2] = true;
+                            q.add(new Robot(row1, col1, row1, col1 + d, 1, now.cnt + 1));
+                            q.add(new Robot(row2, col2, row2, col2 + d, 1, now.cnt + 1));
                         }
                     }
                 }
@@ -72,26 +71,22 @@ class Solution {
         return 0;
     }
 
-    private boolean isValid(int r, int c, int[][] board) {
-        return r >= 0 && c >= 0 && r < board.length && c < board.length && board[r][c] == 0;
+    private boolean isValid(int r, int c, int n, int[][] board) {
+        return r >= 0 && c >= 0 && r < n && c < n && board[r][c] == 0;
     }
 
     static class Robot {
-        int r1, c1, r2, c2, time;
+        int row1, col1, row2, col2;
+        int dir; // 0: 세로, 1: 가로
+        int cnt;
 
-        public Robot(int r1, int c1, int r2, int c2, int time) {
-            this.r1 = r1;
-            this.c1 = c1;
-            this.r2 = r2;
-            this.c2 = c2;
-            this.time = time;
-        }
-
-        public String getKey() {
-            if (r1 < r2 || (r1 == r2 && c1 < c2))
-                return r1 + "," + c1 + "," + r2 + "," + c2;
-            else
-                return r2 + "," + c2 + "," + r1 + "," + c1;
+        public Robot(int row1, int col1, int row2, int col2, int dir, int cnt) {
+            this.row1 = row1;
+            this.col1 = col1;
+            this.row2 = row2;
+            this.col2 = col2;
+            this.dir = dir;
+            this.cnt = cnt;
         }
     }
 }
