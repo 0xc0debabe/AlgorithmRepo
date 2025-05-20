@@ -1,8 +1,9 @@
-import javax.swing.text.html.ListView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 public class Main {
 
@@ -35,9 +36,13 @@ public class Main {
 
         fillVertexCount(r);
 
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < q; i++) {
-            System.out.println(count[Integer.parseInt(br.readLine())]);
+            sb.append(count[Integer.parseInt(br.readLine())]);
+            sb.append('\n');
         }
+
+        System.out.println(sb.toString());
     }
 
     private static void fillVertexCount(int parent) {
@@ -45,7 +50,7 @@ public class Main {
         isVisited[parent] = true;
         for (int child : graph.get(parent)) {
             if (isVisited[child]) continue;
-            
+
             fillVertexCount(child);
             count[parent] += count[child];
         }
