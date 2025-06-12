@@ -12,6 +12,7 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int T = Integer.parseInt(br.readLine());
 
+        StringBuilder sb = new StringBuilder();
         while (T-- > 0) {
             int n = Integer.parseInt(br.readLine());
             arr = new int[n + 1];           // 1-based index
@@ -30,8 +31,9 @@ public class Main {
                 }
             }
 
-            System.out.println(n - count);  // 전체 인원 - 사이클 인원
+            sb.append(n - count).append('\n');  // 전체 인원 - 사이클 인원
         }
+        System.out.println(sb);
     }
 
     private static void dfs(int current) {
@@ -42,10 +44,12 @@ public class Main {
             dfs(next);
         } else if (!finished[next]) {
             // 사이클 발견
-            count++;  // current도 포함
-            for (int i = next; i != current; i = arr[i]) {
+            int temp = next;
+            while (temp != current) {
                 count++;
+                temp = arr[temp];
             }
+            count++; // current도 포함
         }
 
         finished[current] = true;
