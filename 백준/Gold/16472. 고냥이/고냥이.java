@@ -34,13 +34,10 @@ public class Main {
                 }
             }
 
-            answer = Math.max(answer, countAll(countAlphabet));
+            answer = Math.max(answer, i - pointer + 1);
         }
 
         System.out.println(answer);
     }
 
-    private static int countAll(int[] arr) {
-        return Arrays.stream(arr).sum();
-    }
 }
