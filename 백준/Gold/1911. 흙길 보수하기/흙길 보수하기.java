@@ -20,21 +20,20 @@ public class Main {
         }
         Arrays.sort(ranges);
 
-        long now = 0;
-        long answer = 0;
+        int now = 0;
+        int answer = 0;
 
         for (int i = 0; i < n; i++) {
             Range range = ranges[i];
+            int start = Math.max(range.start, now);
+            int end = range.end;
 
-            if (now >= range.end) continue;
+            if (now >= end) continue;
 
-            long start = Math.max(now, range.start);
-            long length = range.end - start;
-
-            long count = (length + l - 1) / l;
-            answer += count;
-
-            now = start + count * l;
+            int r = end - start;
+            int boardCount = r / l + (r % l == 0 ? 0 : 1);
+            now = boardCount * l + start;
+            answer += boardCount;
         }
 
         System.out.println(answer);
