@@ -63,12 +63,12 @@ public class Main {
             int nowVertex = now[0];
             int nowCost = now[1];
 
-//            if (dist[nowVertex] < nowCost) continue;
-            
+            if (dist[nowVertex] < nowCost) continue;
+
             for (int[] next : graph.get(nowVertex)) {
                 int nextVertex = next[0];
                 int nextCost = next[1];
-                
+
                 if (dist[nextVertex] > dist[nowVertex] + nextCost) {
                     dist[nextVertex] = dist[nowVertex] + nextCost;
                     pq.add(new int[]{nextVertex, dist[nextVertex]});
