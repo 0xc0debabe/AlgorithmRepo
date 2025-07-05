@@ -1,54 +1,56 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int[] days;
-    static int N, M;
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt(); // 일 수
-        M = sc.nextInt(); // 인출 횟수
-        days = new int[N];
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-        int max = 0;
+        int n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        int[] arr = new int[n];
         int sum = 0;
-        for (int i = 0; i < N; i++) {
-            days[i] = sc.nextInt();
-            max = Math.max(max, days[i]);
-            sum += days[i];
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            arr[i] = Integer.parseInt(br.readLine());
+            sum += arr[i];
+            if (arr[i] > max) max = arr[i];
         }
 
-        int left = max;     // 최소 인출 금액
-        int right = sum;    // 최대 인출 금액
-        int answer = sum;
+        int left = max;
+        int right = sum;
+        int answer = 0;
 
         while (left <= right) {
             int mid = (left + right) / 2;
 
-            if (canWithdraw(mid)) {
+            if (valid(arr, mid, m)) {
                 answer = mid;
-                right = mid - 1; // 더 줄여도 되는지 확인
+                right = mid - 1;
             } else {
-                left = mid + 1;  // 너무 작아서 못씀
+                left = mid + 1;
             }
         }
 
         System.out.println(answer);
     }
 
-    // mid원을 기준으로 인출 횟수가 M번 이하인지 확인
-    static boolean canWithdraw(int k) {
-        int count = 1; // 첫 번째 인출
-        int balance = k;
-
-        for (int money : days) {
-            if (balance < money) {
+    private static boolean valid(int[] arr, int mid, int k) {
+        int count = 1;
+        int rest = mid;
+        for (int j : arr) {
+            if (j > rest) {
+                rest = mid;
                 count++;
-                balance = k;
             }
-            balance -= money;
+
+            rest -= j;
         }
 
-        return count <= M;
+        return count <= k;
     }
+
 }
