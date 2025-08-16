@@ -1,78 +1,81 @@
 import java.io.*;
-import java.util.*;
+import java.util.StringTokenizer;
 
-public class Main {
-    static int N, L;
-    static int[][] map;
-
+class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-
-        N = Integer.parseInt(st.nextToken());
-        L = Integer.parseInt(st.nextToken());
-
-        map = new int[N][N];
-        for (int i = 0; i < N; i++) {
+        int N = Integer.parseInt(st.nextToken());
+        int L = Integer.parseInt(st.nextToken());
+        int[][] board = new int[N][N];
+        for(int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
-            for (int j = 0; j < N; j++) {
-                map[i][j] = Integer.parseInt(st.nextToken());
+            for(int j = 0; j < N; j++) {
+                board[i][j] = Integer.parseInt(st.nextToken());
+            }
+        }
+        int[] line;
+        boolean[] alreadyInstalled;
+        int answer = 0;
+        for(int i = 0; i < N; i++) {
+            line = board[i];
+            alreadyInstalled = new boolean[N];
+            if(canMake(N, L, line, alreadyInstalled)) {
+                answer++;
             }
         }
 
-        int answer = 0;
+        for(int i = 0; i < N; i++) {
+            line = new int[N];
+            alreadyInstalled = new boolean[N];
+            for(int j = 0; j < N; j++) {
+                line[j] = board[j][i];
+            }
 
-        // 행 검사
-        for (int i = 0; i < N; i++) {
-            int[] line = new int[N];
-            for (int j = 0; j < N; j++) line[j] = map[i][j];
-            if (canWalk(line)) answer++;
-        }
-
-        // 열 검사
-        for (int j = 0; j < N; j++) {
-            int[] line = new int[N];
-            for (int i = 0; i < N; i++) line[i] = map[i][j];
-            if (canWalk(line)) answer++;
+            if(canMake(N, L, line, alreadyInstalled)) {
+                answer++;
+            }
         }
 
         System.out.println(answer);
     }
 
-    static boolean canWalk(int[] arr) {
-        boolean[] bridge = new boolean[N];
+    static boolean canMake(int N, int L, int[] line, boolean[] alreadyInstalled) {
+        for(int i = 0; i < N - 1; i++) {
+            int diff = line[i + 1] - line[i];
+            if(diff == 0) continue;
 
-        for (int i = 0; i < N - 1; i++) {
-            int diff = arr[i + 1] - arr[i];
-
-            if (diff == 0) {
-                continue; // 높이 같음 → 그냥 진행
-            }
-
-            // 오르막
-            else if (diff == 1) {
-                // 뒤에서 L칸 체크
-                for (int j = i; j > i - L; j--) {
-                    if (j < 0 || arr[j] != arr[i] || bridge[j]) return false;
-                    bridge[j] = true;
+            if(diff == 1) {
+                int standard = line[i];
+                for(int j = 0; j < L; j++) {
+                    int idx = i - j;
+                    if(idx < 0 || standard != line[idx] || alreadyInstalled[idx]) return false;
                 }
-            }
 
-            // 내리막
-            else if (diff == -1) {
-                // 앞에서 L칸 체크
-                for (int j = i + 1; j <= i + L; j++) {
-                    if (j >= N || arr[j] != arr[i + 1] || bridge[j]) return false;
-                    bridge[j] = true;
+                for(int j = 0; j < L; j++) {
+                    int idx = i - j;
+                    alreadyInstalled[idx] = true;
                 }
-            }
 
-            // 높이 차이 2 이상 → 불가능
-            else {
+
+            } else if(diff == -1) {
+                int standard = line[i + 1];
+                for(int j = 0; j < L; j++) {
+                    int idx = i + j + 1;
+                    if(idx >= N || standard != line[idx] || alreadyInstalled[idx]) return false;
+                }
+
+                for(int j = 0; j < L; j++) {
+                    int idx = i + j + 1;
+                    alreadyInstalled[idx] = true;
+                }
+
+
+            } else {
                 return false;
             }
         }
-
         return true;
     }
+
 }
