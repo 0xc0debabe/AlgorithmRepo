@@ -1,33 +1,29 @@
 import java.io.*;
-import java.util.Arrays;
 
 public class Main {
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int T = Integer.parseInt(br.readLine().trim());
 
-	static int[][] dp;
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		int n = Integer.parseInt(br.readLine());
-		dp = new int[100001][4];
-		
-		dp[1][1] =1;
-		dp[2][1] =1;
-		dp[2][2] =1;
-		dp[3][1] =1;
-		dp[3][2] =1;
-		dp[3][3] =1;
-		
-		for(int i=4; i<10001; i++) {
-			dp[i][1] = dp[i-1][1];
-			dp[i][2] = dp[i-2][1]+ dp[i-2][2];
-			dp[i][3] = dp[i-3][1] + dp[i-3][2] + dp[i-3][3];
-		}
-		
-		
-		for(int i=0; i<n; i++) {
-			int num = Integer.parseInt(br.readLine());
-			System.out.println(dp[num][1] + dp[num][2] + dp[num][3]);
-			
-		}
-	}
+        final int MAX = 10000;
+        int[] dp = new int[MAX + 1];
+
+        // dp[0] = 1 : "아무 것도 안 쓰는 방법"을 1로 둬야 누적이 제대로 됨
+        dp[0] = 1;
+
+        int[] coins = {1, 2, 3};
+        // 조합을 세려면 "동전 바깥, 금액 안쪽" 순서로 누적
+        for (int c : coins) {
+            for (int i = c; i <= MAX; i++) {
+                dp[i] += dp[i - c];
+            }
+        }
+
+        StringBuilder sb = new StringBuilder();
+        while (T-- > 0) {
+            int n = Integer.parseInt(br.readLine().trim());
+            sb.append(dp[n]).append('\n');
+        }
+        System.out.print(sb.toString());
+    }
 }
