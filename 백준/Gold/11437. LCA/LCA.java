@@ -1,70 +1,81 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 
-
 public class Main {
-    static int[] tree;
-    static List<List<Integer>> lists;
-    static boolean[] isVisited;
+    static int N, M;
+    static ArrayList<Integer>[] tree;
+    static int[] depth;
+    static int[] parent;
+    static boolean[] visited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int n = Integer.parseInt(br.readLine());
-        tree = new int[n + 1];
-        isVisited = new boolean[n + 1];
-        lists = new ArrayList<>();
-        for (int i = 0; i <= n; i++) {
-            lists.add(new ArrayList<>());
-        }
         StringTokenizer st;
-        for (int i = 0; i < n - 1; i++) {
-            st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            lists.get(a).add(b);
-            lists.get(b).add(a);
+
+        N = Integer.parseInt(br.readLine());
+        tree = new ArrayList[N + 1];
+        depth = new int[N + 1];
+        parent = new int[N + 1];
+        visited = new boolean[N + 1];
+
+        for (int i = 1; i <= N; i++) {
+            tree[i] = new ArrayList<>();
         }
 
-        bfs(1);
+        for (int i = 0; i < N - 1; i++) {
+            st = new StringTokenizer(br.readLine());
+            int u = Integer.parseInt(st.nextToken());
+            int v = Integer.parseInt(st.nextToken());
+            tree[u].add(v);
+            tree[v].add(u);
+        }
+
+        // 루트 1에서 DFS로 depth와 parent 계산
+        dfs(1, 0);
+
+        M = Integer.parseInt(br.readLine());
         StringBuilder sb = new StringBuilder();
-        int m = Integer.parseInt(br.readLine());
-        for (int i = 0; i < m; i++) {
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int a = Integer.parseInt(st.nextToken());
             int b = Integer.parseInt(st.nextToken());
-            sb.append(find(a, b)).append("\n");
+            sb.append(lca(a, b)).append("\n");
         }
-        System.out.println(sb);
+
+        System.out.print(sb);
     }
 
-    public static void bfs(int n) {
-        Queue<Integer> queue = new LinkedList<>();
-        queue.add(n);
-        isVisited[n] = true;
-        while (!queue.isEmpty()) {
-            int now = queue.poll();
-            for (int value : lists.get(now)) {
-                if (!isVisited[value]) {
-                    isVisited[value] = true;
-                    tree[value] = now;
-                    queue.add(value);
-                }
+    static void dfs(int node, int d) {
+        visited[node] = true;
+        depth[node] = d;
 
+        for (int next : tree[node]) {
+            if (!visited[next]) {
+                parent[next] = node;
+                dfs(next, d + 1);
             }
         }
     }
 
-    static int find(int a, int b) {
-        Set<Integer> ancestorsA = new HashSet<>();
-        while (a != 0) {
-            ancestorsA.add(a);
-            a = tree[a];
+    static int lca(int a, int b) {
+        // 깊이가 더 깊은 노드를 맞춤
+        if (depth[a] < depth[b]) {
+            int temp = a;
+            a = b;
+            b = temp;
         }
-        while (!ancestorsA.contains(b)) {
-            b = tree[b];
+
+        // 깊이 맞추기
+        while (depth[a] > depth[b]) {
+            a = parent[a];
         }
-        return b;
+
+        // 공통 조상 찾기
+        while (a != b) {
+            a = parent[a];
+            b = parent[b];
+        }
+
+        return a;
     }
 }
