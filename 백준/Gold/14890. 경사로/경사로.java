@@ -1,38 +1,65 @@
 import java.io.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 class Main {
+
+    static int N, L;
+    static int[][] board;
+    static boolean[] isVisited;
+
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int L = Integer.parseInt(st.nextToken());
-        int[][] board = new int[N][N];
+        N = Integer.parseInt(st.nextToken());
+        L = Integer.parseInt(st.nextToken());
+        board = new int[N][N];
+
         for(int i = 0; i < N; i++) {
             st = new StringTokenizer(br.readLine());
+
             for(int j = 0; j < N; j++) {
                 board[i][j] = Integer.parseInt(st.nextToken());
             }
         }
-        int[] line;
-        boolean[] alreadyInstalled;
+
+//        int[] line = new int[N];
+//        int answer = 0;
+//        for(int i = 0; i < N; i++) {
+//            line = board[i];
+//            isVisited = new boolean[N];
+//            if(canThrough(line)) {
+//                answer++;
+//            }
+//        }
+//
+//        for(int i = 0; i < N; i++) {
+//            for(int j = 0; j < N; j++) {
+//                line[j] = board[j][i];
+//            }
+//
+//            isVisited = new boolean[N];
+//            if(canThrough(line)) {
+//                answer++;
+//            }
+//        }
+
         int answer = 0;
         for(int i = 0; i < N; i++) {
-            line = board[i];
-            alreadyInstalled = new boolean[N];
-            if(canMake(N, L, line, alreadyInstalled)) {
+            int[] line = board[i];
+            isVisited = new boolean[N];
+            if(canThrough(line)) {
                 answer++;
             }
         }
 
         for(int i = 0; i < N; i++) {
-            line = new int[N];
-            alreadyInstalled = new boolean[N];
+            int[] line = new int[N];
             for(int j = 0; j < N; j++) {
                 line[j] = board[j][i];
             }
 
-            if(canMake(N, L, line, alreadyInstalled)) {
+            isVisited = new boolean[N];
+            if(canThrough(line)) {
                 answer++;
             }
         }
@@ -40,41 +67,42 @@ class Main {
         System.out.println(answer);
     }
 
-    static boolean canMake(int N, int L, int[] line, boolean[] alreadyInstalled) {
+    static boolean canThrough(int[] line) {
+
         for(int i = 0; i < N - 1; i++) {
-            int diff = line[i + 1] - line[i];
-            if(diff == 0) continue;
+            int nowPos = line[i];
+            int nextPos = line[i + 1];
 
-            if(diff == 1) {
-                int standard = line[i];
-                for(int j = 0; j < L; j++) {
-                    int idx = i - j;
-                    if(idx < 0 || standard != line[idx] || alreadyInstalled[idx]) return false;
+            if(nowPos == nextPos) continue;
+
+            if(Math.abs(nextPos - nowPos) > 1) return false;
+
+            if(nowPos > nextPos) {
+                for(int j = 1; j <= L; j++) {
+                    int idx = i + j;
+                    if(idx >= N || isVisited[idx] || line[idx] != nextPos) return false;
                 }
 
-                for(int j = 0; j < L; j++) {
-                    int idx = i - j;
-                    alreadyInstalled[idx] = true;
+                for(int j = 1; j <= L; j++) {
+                    int idx = i + j;
+                    isVisited[idx] = true;
                 }
-
-
-            } else if(diff == -1) {
-                int standard = line[i + 1];
-                for(int j = 0; j < L; j++) {
-                    int idx = i + j + 1;
-                    if(idx >= N || standard != line[idx] || alreadyInstalled[idx]) return false;
-                }
-
-                for(int j = 0; j < L; j++) {
-                    int idx = i + j + 1;
-                    alreadyInstalled[idx] = true;
-                }
-
 
             } else {
-                return false;
+
+                for(int j = 0; j < L; j++) {
+                    int idx = i - j;
+                    if(idx < 0 || isVisited[idx] || line[idx] != nowPos) return false;
+                }
+
+                for(int j = 0; j < L; j++) {
+                    int idx = i - j;
+                    isVisited[idx] = true;
+                }
+
             }
         }
+
         return true;
     }
 
