@@ -19,7 +19,7 @@ class Main {
             exam[i][1] = s;
         }
 
-        Arrays.sort(exam, (x, y) -> x[0] - y[0]);
+        //Arrays.sort(exam, (x, y) -> x[0] - y[0]);
 
         int[][] dp = new int[N + 1][T + 1];
         for(int i = 1; i <= N; i++) {
