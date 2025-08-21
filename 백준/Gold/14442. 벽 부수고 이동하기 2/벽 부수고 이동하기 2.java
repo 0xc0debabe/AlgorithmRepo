@@ -1,78 +1,76 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+class Main {
     static int N, M, K;
-    static int[][] map;
-    static boolean[][][] visited; // [x][y][벽 부순 횟수]
-
-    static int[] dx = {1, -1, 0, 0};
-    static int[] dy = {0, 0, 1, -1};
-
-    static class Node {
-        int x, y, dist, broken;
-        Node(int x, int y, int dist, int broken) {
-            this.x = x;
-            this.y = y;
-            this.dist = dist;
-            this.broken = broken;
-        }
-    }
+    static int[][] board;
+    static int[] dr = {-1, 1, 0, 0};
+    static int[] dc = {0, 0, -1, 1};
+    static boolean[][][] isVisited;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         K = Integer.parseInt(st.nextToken());
+        board = new int[N][M];
+        isVisited = new boolean[K + 1][N][M];
 
-        map = new int[N][M];
-        visited = new boolean[N][M][K + 1];
-
-        for (int i = 0; i < N; i++) {
-            String line = br.readLine();
-            for (int j = 0; j < M; j++) {
-                map[i][j] = line.charAt(j) - '0';
+        for(int i = 0; i < N; i++) {
+            String s = br.readLine();
+            for(int j = 0; j < M; j++) {
+                char c = s.charAt(j);
+                board[i][j] = c - '0';
             }
         }
 
-        System.out.println(bfs());
+        int answer = -1;
+        Queue<Move> q = new LinkedList<>();
+        q.add(new Move(0, 0, 0, 1));
+        isVisited[0][0][0] = true;
+
+        while(!q.isEmpty()) {
+            Move now = q.poll();
+
+            if(now.r == N - 1 && now.c == M - 1) {
+                answer = now.moveCnt;
+                break;
+            }
+
+            for(int i = 0; i < 4; i++) {
+                int nr = dr[i] + now.r;
+                int nc = dc[i] + now.c;
+
+                if(nr < 0 || nc < 0 || nr >= N || nc >= M) continue;
+
+                int bCnt = now.breakCnt;
+                if(board[nr][nc] == 1) {
+                    if(now.breakCnt >= K) continue;
+                    bCnt++;
+                }
+                
+                if(isVisited[bCnt][nr][nc]) continue;
+                isVisited[bCnt][nr][nc] = true;
+                q.add(new Move(nr, nc, bCnt, now.moveCnt + 1));
+            }
+
+        }
+
+        System.out.println(answer);
     }
 
-    static int bfs() {
-        Queue<Node> q = new LinkedList<>();
-        q.add(new Node(0, 0, 1, 0));
-        visited[0][0][0] = true;
+    static class Move {
+        int r;
+        int c;
+        int breakCnt;
+        int moveCnt;
 
-        while (!q.isEmpty()) {
-            Node cur = q.poll();
-
-            // 도착점에 도달하면 반환
-            if (cur.x == N - 1 && cur.y == M - 1) {
-                return cur.dist;
-            }
-
-            for (int d = 0; d < 4; d++) {
-                int nx = cur.x + dx[d];
-                int ny = cur.y + dy[d];
-
-                if (nx < 0 || ny < 0 || nx >= N || ny >= M) continue;
-
-                // 빈 칸
-                if (map[nx][ny] == 0 && !visited[nx][ny][cur.broken]) {
-                    visited[nx][ny][cur.broken] = true;
-                    q.add(new Node(nx, ny, cur.dist + 1, cur.broken));
-                }
-
-                // 벽이지만 부술 수 있는 경우
-                else if (map[nx][ny] == 1 && cur.broken < K && !visited[nx][ny][cur.broken + 1]) {
-                    visited[nx][ny][cur.broken + 1] = true;
-                    q.add(new Node(nx, ny, cur.dist + 1, cur.broken + 1));
-                }
-            }
+        public Move(int r, int c, int count, int moveCnt) {
+            this.r = r;
+            this.c = c;
+            this.breakCnt = count;
+            this.moveCnt = moveCnt;
         }
-
-        return -1; // 도달 불가능
     }
 }
